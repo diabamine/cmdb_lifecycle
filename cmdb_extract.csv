@@ -1,0 +1,13 @@
+asset_id,hostname,product,version,environment
+A001,srv-web-01,Red Hat Enterprise Linux,7.9,prod
+A002,srv-web-02,RHEL,8.6,prod
+A003,srv-db-01,Red Hat Enterprise Linux,9.4,prod
+A004,srv-app-07,RHEL,10.0,dev
+A005,ocp-master-1,OpenShift Container Platform,4.12,prod
+A006,srv-ora-02,Oracle Linux,8.8,prod
+A007,srv-pg-01,PostgreSQL,13.14,prod
+A008,srv-ubu-03,Ubuntu,18.04,test
+A009,srv-win-01,Windows Server,2012 R2,prod
+A010,srv-py-01,Python,3.8.10,dev
+A011,srv-mystery,Acme Widget Server,1.0,prod
+A012,srv-rh6,Red Hat Enterprise Linux,6.10,prod

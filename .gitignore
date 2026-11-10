@@ -1,0 +1,20 @@
+# environment
+.venv/
+__pycache__/
+*.pyc
+
+# fetched or derived data: rebuilt by run_all.sh
+snapshot/
+raw/
+out/
+out2/
+out_real/
+out_real_before/
+out_vendor/
+*.log
+
+# human review decisions can contain internal product names: commit deliberately, if at all
+aliases.csv
+
+# editor settings
+.vscode/

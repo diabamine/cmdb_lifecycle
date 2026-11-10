@@ -1,0 +1,503 @@
+<title>CMDB Lifecycle Matcher</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: one long reading column; each topic opens with a diagram, then the rules and numbers behind it.
+   Colors carry meaning everywhere: blue = lifecycle sources, teal = vendor feeds, violet = vulnerability data,
+   green = accepted, amber = needs review, rose = unsupported or rejected. */
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --surface-2:#ECF0F5; --fg:#13202C; --muted:#53636F; --line:#D3DBE3;
+  --accent:#1D5BCB; --accent-soft:#E3ECFC;
+  --vendor:#0A7788; --vendor-soft:#DDF1F3;
+  --vuln:#6A4CC4; --vuln-soft:#ECE8FA;
+  --ok:#11785F; --ok-soft:#DCF1EA;
+  --warn:#9A5B00; --warn-soft:#FBEBCF;
+  --bad:#B8344A; --bad-soft:#FADFE3;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151C; --surface:#151F29; --surface-2:#1B2733; --fg:#E3EAF1; --muted:#92A2B1; --line:#2A3846;
+  --accent:#78A6FF; --accent-soft:#17294A;
+  --vendor:#4DC3D2; --vendor-soft:#102F35;
+  --vuln:#AA97F2; --vuln-soft:#241E43;
+  --ok:#4EC6A8; --ok-soft:#0F3029;
+  --warn:#E6A94C; --warn-soft:#3A2A0C;
+  --bad:#F47E8F; --bad-soft:#40181F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151C; --surface:#151F29; --surface-2:#1B2733; --fg:#E3EAF1; --muted:#92A2B1; --line:#2A3846;
+  --accent:#78A6FF; --accent-soft:#17294A;
+  --vendor:#4DC3D2; --vendor-soft:#102F35;
+  --vuln:#AA97F2; --vuln-soft:#241E43;
+  --ok:#4EC6A8; --ok-soft:#0F3029;
+  --warn:#E6A94C; --warn-soft:#3A2A0C;
+  --bad:#F47E8F; --bad-soft:#40181F; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
+body{background:var(--bg);color:var(--fg);font:400 15px/1.6 var(--sans)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.wrap{max-width:1060px;margin:0 auto;padding-block:0 4rem;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--sans);letter-spacing:-.015em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4.5vw,2.8rem);line-height:1.1;font-weight:600}
+h2{font-size:1.55rem;line-height:1.2;font-weight:600}
+h3{font-size:1.02rem;font-weight:600}
+p{margin:0}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{background:var(--surface-2);padding:.08em .4em;border-radius:4px}
+a{color:var(--accent)}
+.muted{color:var(--muted)}
+
+/* top navigation */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));}
+nav ul{list-style:none;margin:0;padding:.6rem 0;display:flex;gap:.35rem;overflow-x:auto;white-space:nowrap}
+nav a{display:block;text-decoration:none;color:var(--muted);font-size:.84rem;font-weight:500;padding:.3rem .7rem;border-radius:999px}
+nav a:hover,nav a:focus-visible{background:var(--surface-2);color:var(--fg);outline:none}
+
+header.top{padding-block:2.8rem 1.6rem;display:grid;gap:1rem;max-width:46rem}
+.eyebrow{font:500 .74rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--accent)}
+header.top p{color:var(--muted);font-size:1.05rem}
+
+section{padding-block:3rem 0;display:grid;gap:1.4rem}
+section>.lead{max-width:46rem;color:var(--muted)}
+.tag{display:inline-block;font:500 .72rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:.28rem .5rem;border-radius:5px;margin-right:.3rem}
+.t-blue{background:var(--accent-soft);color:var(--accent)} .t-teal{background:var(--vendor-soft);color:var(--vendor)}
+.t-vio{background:var(--vuln-soft);color:var(--vuln)} .t-ok{background:var(--ok-soft);color:var(--ok)}
+.t-warn{background:var(--warn-soft);color:var(--warn)} .t-bad{background:var(--bad-soft);color:var(--bad)}
+.t-grey{background:var(--surface-2);color:var(--muted)}
+
+figure{margin:0;display:grid;gap:.6rem}
+.fig{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.8rem}
+.fig svg{display:block;width:100%;height:auto;min-width:700px}
+figcaption{font-size:.86rem;color:var(--muted);max-width:52rem}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;display:grid;gap:.65rem;align-content:start;min-width:0}
+.card ul,.card ol{margin:0;padding-left:1.15rem;display:grid;gap:.3rem}
+.card li::marker{color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{text-align:left;padding:.55rem .8rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .72rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td code{white-space:nowrap}
+pre{margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem;overflow-x:auto;font:400 .8rem/1.55 var(--mono)}
+.row-sample{font:400 .8rem/1.45 var(--mono)}
+
+/* funnel bars */
+.bars{display:grid;gap:.5rem}
+.bar{display:grid;grid-template-columns:minmax(10rem,19rem) 1fr 7.5rem;gap:.8rem;align-items:center;font-size:.88rem}
+.bar .track{height:1.1rem;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;border-radius:4px}
+.bar .v{font-variant-numeric:tabular-nums;text-align:right;color:var(--muted);white-space:nowrap}
+@media (max-width:640px){.bar{grid-template-columns:1fr 6.5rem}.bar .track{grid-column:1/-1;order:3}}
+
+.pill{display:inline-block;font:500 .74rem/1 var(--mono);padding:.22rem .45rem;border-radius:999px}
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:.7rem .9rem;border-radius:0 8px 8px 0;font-size:.9rem}
+
+/* svg paint classes (colors come from tokens so both themes work) */
+svg text{font-family:var(--sans);fill:var(--fg)}
+svg .m{fill:var(--muted);font-size:11.5px} svg .t{font-size:13px;font-weight:500} svg .h{font-size:10.5px;font-weight:500;letter-spacing:.09em;fill:var(--muted);font-family:var(--mono)}
+svg .mono{font-family:var(--mono);font-size:11.5px}
+svg .box{fill:var(--surface);stroke:var(--line);stroke-width:1.2}
+svg .b-blue{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2} svg .b-teal{fill:var(--vendor-soft);stroke:var(--vendor);stroke-width:1.2}
+svg .b-vio{fill:var(--vuln-soft);stroke:var(--vuln);stroke-width:1.2} svg .b-ok{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.2}
+svg .b-warn{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2} svg .b-bad{fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.2}
+svg .b-grey{fill:var(--surface-2);stroke:var(--line);stroke-width:1.2}
+svg .ln{stroke:var(--muted);stroke-width:1.4;fill:none} svg .dash{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:5 4;fill:none}
+svg .ar{fill:var(--muted)}
+svg .c-ok{fill:var(--ok)} svg .c-warn{fill:var(--warn)} svg .c-bad{fill:var(--bad)} svg .c-acc{fill:var(--accent)}
+svg .tx-ok{fill:var(--ok)} svg .tx-warn{fill:var(--warn)} svg .tx-bad{fill:var(--bad)} svg .tx-acc{fill:var(--accent)}
+footer{margin-top:3.5rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<nav aria-label="Sections"><ul>
+  <li><a href="#overview">Overview</a></li><li><a href="#mock">Mock CMDB</a></li><li><a href="#sources">Source data</a></li>
+  <li><a href="#matching">Matching</a></li><li><a href="#results">Results</a></li><li><a href="#improve">Improve</a></li><li><a href="#generalize">Real CMDB</a></li>
+</ul></nav>
+
+<header class="top" id="overview">
+  <span class="eyebrow">Project recap</span>
+  <h1>CMDB Lifecycle Matcher</h1>
+  <p>Take dirty CMDB rows (vendor, product, version), match each one to a canonical product, and attach end-of-life dates and known vulnerabilities. Everything runs offline against a snapshot you fetch once.</p>
+</header>
+
+<figure>
+  <div class="fig"><svg viewBox="0 0 1000 330" role="img" aria-label="Pipeline: sources fetched once online become a snapshot of files, which the offline matching engine uses to turn CMDB rows into enriched rows, a review queue and the Streamlit app.">
+    <defs><marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ar"/></marker></defs>
+    <text class="h" x="10" y="22">ONLINE, RUN ONCE</text><text class="h" x="310" y="22">SNAPSHOT: FILES YOU CARRY</text>
+    <text class="h" x="570" y="22">OFFLINE MATCHING ENGINE</text><text class="h" x="850" y="22">RESULTS</text>
+    <rect class="b-blue" x="10" y="34" width="250" height="52" rx="8"/><text class="t" x="24" y="56">Lifecycle dates</text><text class="m" x="24" y="74">endoflife.date · Red Hat</text>
+    <rect class="b-teal" x="10" y="96" width="250" height="52" rx="8"/><text class="t" x="24" y="118">Vendor feeds</text><text class="m" x="24" y="136">Microsoft · Juniper · VMware · Cisco*</text>
+    <rect class="b-vio" x="10" y="158" width="250" height="52" rx="8"/><text class="t" x="24" y="180">Vulnerabilities</text><text class="m" x="24" y="198">NVD 421k CVEs · CISA KEV · EPSS</text>
+    <rect class="b-grey" x="10" y="220" width="250" height="52" rx="8"/><text class="t" x="24" y="242">Public inventory</text><text class="m" x="24" y="260">winget · Homebrew · Ubuntu</text>
+    <line class="ln" x1="262" y1="160" x2="306" y2="160" marker-end="url(#ar1)"/><text class="m" x="264" y="150">fetch</text>
+    <rect class="box" x="310" y="34" width="210" height="238" rx="8"/>
+    <text class="mono" x="324" y="62">endoflife_full.json</text><text class="mono" x="324" y="88">redhat_lifecycle.json</text><text class="mono" x="324" y="114">vendor_lifecycle.json</text>
+    <text class="mono" x="324" y="140">cisa_kev.json</text><text class="mono" x="324" y="166">epss_scores.csv.gz</text><text class="mono" x="324" y="192">nvd.sqlite (314 MB)</text>
+    <text class="mono" x="324" y="218">inventory.csv</text><text class="m" x="324" y="252">dated, versioned, portable</text>
+    <line class="ln" x1="522" y1="160" x2="566" y2="160" marker-end="url(#ar1)"/><text class="m" x="520" y="150">load</text>
+    <rect class="b-ok" x="570" y="34" width="230" height="238" rx="8"/>
+    <text class="t" x="586" y="64">1 normalize names</text><text class="t" x="586" y="100">2 match the product</text><text class="t" x="586" y="136">3 match version to cycle</text>
+    <text class="t" x="586" y="172">4 lifecycle status</text><text class="t" x="586" y="208">5 NVD and KEV exposure</text><text class="m" x="586" y="250">cmdb_enrich.py</text>
+    <line class="ln" x1="802" y1="160" x2="846" y2="160" marker-end="url(#ar1)"/>
+    <rect class="box" x="850" y="34" width="140" height="238" rx="8"/>
+    <text class="mono" x="862" y="70">cmdb_enriched</text><text class="mono" x="862" y="88">.csv</text><text class="mono" x="862" y="130">review_queue</text><text class="mono" x="862" y="148">.csv</text>
+    <text class="t" x="862" y="196">Streamlit app</text><text class="m" x="862" y="214">trace, coverage,</text><text class="m" x="862" y="230">filters</text>
+    <line class="dash" x1="285" y1="24" x2="285" y2="320"/><text class="m" x="296" y="309">internet only left of this line</text>
+    <rect class="b-grey" x="570" y="288" width="230" height="34" rx="8"/><text class="t" x="586" y="309">Your CMDB rows</text>
+    <line class="ln" x1="685" y1="286" x2="685" y2="276" marker-end="url(#ar1)"/>
+    <text class="m" x="10" y="326">* Cisco needs your API credentials, so it is coded but not loaded.</text>
+  </svg></div>
+  <figcaption>The whole project in one picture. Left of the dashed line you need internet, once. Right of it, everything is files and memory.</figcaption>
+</figure>
+
+<!-- ============================ MOCK CMDB ============================ -->
+<section id="mock">
+  <h2>How the mock CMDB is built</h2>
+  <p class="lead">No public dataset of a real enterprise CMDB exists, and production data cannot leave your environment. So there are two stand-ins, each answering a different question.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3><span class="tag t-warn">synthetic</span>Generated, with an answer key</h3>
+      <p class="muted">Answers “is the matcher right?” because every row has a known truth. <code>make_synthetic_cmdb.py</code></p>
+      <ol>
+        <li>Pick a real product from the endoflife.date catalogue, weighted so a few popular products dominate (Pareto), and a real release of it.</li>
+        <li>Write the clean values: vendor from its CPE id, version from the release.</li>
+        <li>Inject noise: typos, upper/lower case, reversed words, edition suffixes, vendor aliases, missing vendors, odd version formats, package-style strings.</li>
+        <li>Add 10% hardware models and 7% in-house apps that must stay unmatched.</li>
+        <li>Write <code>cmdb_synthetic.csv</code> (5,000 rows) and a separate <code>cmdb_truth.csv</code>.</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3><span class="tag t-blue">real data</span>Public software catalogues, untouched</h3>
+      <p class="muted">Answers “what does real-world naming look like?” There is no answer key. <code>fetch_inventory.py</code></p>
+      <ol>
+        <li><b>winget</b>: 15,979 Windows apps, with publisher, display name, latest version.</li>
+        <li><b>Homebrew casks</b>: 7,814 macOS apps, with no vendor at all.</li>
+        <li><b>Ubuntu 22.04 packages</b>: 6,090 apt packages, with maintainer and epoch-style versions.</li>
+        <li>No noise is added. These are 29,997 rows as published, and this is what the app analyses.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Origin</th><th>vendor</th><th>product</th><th>version</th><th>what is dirty</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-warn">synthetic</span></td><td class="row-sample">CENTOS</td><td class="row-sample">CnetOS</td><td class="row-sample">8</td><td>typo, upper-case vendor, major version only (truth: CentOS 8)</td></tr>
+      <tr><td><span class="tag t-warn">synthetic</span></td><td class="row-sample">Elastic NV</td><td class="row-sample">Elasticsearch Standard</td><td class="row-sample">v9.2.8</td><td>vendor alias, edition suffix, “v” prefix</td></tr>
+      <tr><td><span class="tag t-warn">synthetic</span></td><td class="row-sample">typo3</td><td class="row-sample">TYPO3 Server</td><td class="row-sample">10.4.62</td><td>invented “Server” suffix, plus package string <code>typo3-10.4.62-10.el9</code></td></tr>
+      <tr><td><span class="tag t-blue">winget</span></td><td class="row-sample">NirSoft</td><td class="row-sample">ManageWirelessNetworks</td><td class="row-sample">1.17</td><td>long-tail tool, CamelCase name, no lifecycle published</td></tr>
+      <tr><td><span class="tag t-blue">Ubuntu</span></td><td class="row-sample">Ubuntu Developers</td><td class="row-sample">python3-oslo.utils</td><td class="row-sample">4.12.2-0ubuntu1</td><td>vendor carries no signal, sub-package of a product, distro version suffix</td></tr>
+      <tr><td><span class="tag t-blue">Homebrew</span></td><td class="row-sample">(empty)</td><td class="row-sample">Recut</td><td class="row-sample">4.5.4,eyJfcmFpbHMi…</td><td>missing vendor, token appended to the version</td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ============================ SOURCES ============================ -->
+<section id="sources">
+  <h2>How source data is fetched and structured</h2>
+  <p class="lead">Each source is collected once by a script that can use the internet, written to a file, and carried to the offline side. Different sources need different methods, but they all end up in the same shape.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Source</th><th>Method</th><th class="num">Records</th><th>Why this one</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag t-blue">lifecycle</span>endoflife.date</td><td>One bulk API call, <code>/api/v1/products/full</code></td><td class="num">489 products</td><td>Broad coverage; aliases and CPE/purl ids link products to NVD</td><td><span class="tag t-ok">loaded</span></td></tr>
+      <tr><td><span class="tag t-blue">lifecycle</span>Red Hat</td><td>Product life cycles API, all products</td><td class="num">236 products</td><td>Official RHEL and OpenShift phases, including paid ELS</td><td><span class="tag t-ok">loaded</span></td></tr>
+      <tr><td><span class="tag t-teal">vendor</span>Microsoft</td><td>Scrape 830 lifecycle pages; URLs from the official sitemap</td><td class="num">1,642 cycles</td><td>No API exists; ESU rows become extended-support dates</td><td><span class="tag t-ok">loaded</span></td></tr>
+      <tr><td><span class="tag t-teal">vendor</span>Juniper</td><td>Scrape the HTML tables of 63 product-family pages</td><td class="num">676 notices</td><td>Hardware end-of-life per SKU; every SKU becomes a searchable alias</td><td><span class="tag t-ok">loaded</span></td></tr>
+      <tr><td><span class="tag t-teal">vendor</span>VMware</td><td>3 public Broadcom KB articles</td><td class="num">6 rows</td><td>The full matrix sits behind a login; drop a portal export in <code>manual/</code></td><td><span class="tag t-warn">partial</span></td></tr>
+      <tr><td><span class="tag t-teal">vendor</span>Cisco EoX v5</td><td>Official API, OAuth2 client credentials</td><td class="num">0</td><td>Needs a Cisco account with a service contract</td><td><span class="tag t-warn">coded, untested</span></td></tr>
+      <tr><td><span class="tag t-teal">vendor</span>NetApp</td><td>Manual CSV import only</td><td class="num">0</td><td>No reliable public source; third-party lists are not NetApp data</td><td><span class="tag t-grey">not loaded</span></td></tr>
+      <tr><td><span class="tag t-vio">vulnerability</span>NVD</td><td>Per-year JSON files from a public mirror (117 MB), reduced to SQLite</td><td class="num">421,272 CVEs</td><td>Version-level CVEs, CVSS, CWE; no API key or rate limit</td><td><span class="tag t-ok">loaded</span></td></tr>
+      <tr><td><span class="tag t-vio">vulnerability</span>CISA KEV + EPSS</td><td>One JSON file and one CSV</td><td class="num">~1,770 CVEs</td><td>“Exploited in the wild” and exploit-probability signals</td><td><span class="tag t-ok">loaded</span></td></tr>
+    </tbody></table></div>
+
+  <figure>
+    <div class="fig"><svg viewBox="0 0 960 400" role="img" aria-label="How the loaded data is structured in memory: products with releases, a name index pointing to products, and an NVD SQLite index with CVEs, affected-version rows and product names.">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ar"/></marker></defs>
+      <text class="h" x="10" y="20">IN MEMORY (loaded once)</text>
+      <rect class="b-grey" x="10" y="32" width="270" height="190" rx="8"/>
+      <text class="t" x="24" y="56">Name index</text><text class="m" x="24" y="74">12,012 normalized names</text>
+      <text class="mono" x="24" y="104">"windows server 2016"</text><text class="mono" x="24" y="124">"ex3400 48p"</text><text class="mono" x="24" y="144">"firefox"</text><text class="mono" x="24" y="164">"vmware esxi"</text>
+      <text class="m" x="24" y="200">name → set of product ids</text>
+      <line class="ln" x1="282" y1="127" x2="346" y2="127" marker-end="url(#ar2)"/><text class="m" x="290" y="118">points to</text>
+      <rect class="b-blue" x="350" y="32" width="320" height="190" rx="8"/>
+      <text class="t" x="364" y="56">Product (2,170 of them)</text>
+      <text class="mono" x="364" y="82">source   endoflife | redhat |</text><text class="mono" x="364" y="100">         microsoft | juniper | vmware</text>
+      <text class="mono" x="364" y="122">label, category, vendor</text><text class="mono" x="364" y="142">cpes   [(vendor, product)]</text><text class="mono" x="364" y="162">kev    [exploited CVEs, EPSS]</text>
+      <text class="mono" x="364" y="182">releases [ … ]</text><text class="m" x="364" y="206">one product holds many cycles</text>
+      <line class="ln" x1="672" y1="127" x2="716" y2="127" marker-end="url(#ar2)"/>
+      <rect class="b-teal" x="720" y="32" width="230" height="190" rx="8"/>
+      <text class="t" x="734" y="56">Release (one cycle)</text>
+      <text class="mono" x="734" y="84">cycle        "9" · "7.x"</text><text class="mono" x="734" y="104">release_date</text><text class="mono" x="734" y="124">end_sale</text><text class="mono" x="734" y="144">eoas   end of full support</text>
+      <text class="mono" x="734" y="164">eol    end of life</text><text class="mono" x="734" y="184">eoes   paid extended end</text><text class="mono" x="734" y="204">latest</text>
+      <text class="h" x="10" y="262">ON DISK (SQLite, queried per row)</text>
+      <rect class="b-vio" x="10" y="274" width="940" height="108" rx="8"/>
+      <text class="t" x="24" y="298">nvd.sqlite</text>
+      <text class="mono" x="24" y="324">cve        id · published · cvss · severity · kev · cwe · description</text>
+      <text class="mono" x="24" y="344">affects    vendor · product · cve · exact version · start≥ · start&gt; · end≤ · end&lt;      2,150,950 rows</text>
+      <text class="mono" x="24" y="364">products   121,719 distinct vendor:product names, used to find a CMDB name in NVD</text>
+    </svg></div>
+    <figcaption>Every lifecycle source, official or scraped, is flattened into the same Product and Release records, so the matcher does not care where a date came from. NVD stays on disk because it is large.</figcaption>
+  </figure>
+  <p class="muted">A new vendor feed only has to produce records with nine fields (<code>vendor, product, cycle, release_date, end_sale, end_support_full, eol, aliases, url</code>). Microsoft’s paid Extended Security Update rows are folded into <code>eoes</code>, so SQL Server 2014 reads as “extended support only” instead of “supported”.</p>
+</section>
+
+<!-- ============================ MATCHING ============================ -->
+<section id="matching">
+  <h2>How matching works, step by step</h2>
+  <p class="lead">A row goes through a cascade from cheap and certain to expensive and doubtful. It stops at the first confident answer. Each row keeps the method, a confidence score and a reason if it needs a human.</p>
+
+  <figure>
+    <div class="fig"><svg viewBox="0 0 960 860" role="img" aria-label="Matching cascade: input row, normalize into candidate spellings, exact lookup, fuzzy search only if no exact hit, decision by score, version to release cycle, lifecycle status, NVD exposure, enriched output.">
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ar"/></marker></defs>
+      <!-- stages -->
+      <rect class="b-grey" x="40" y="10" width="440" height="64" rx="8"/><text class="t" x="56" y="36">Input row</text><text class="m" x="56" y="56">vendor · product · version · package string</text>
+      <text class="m" x="510" y="40">example: MSFT · Windows Server 2016 Standard · 10.0.14393</text>
+      <line class="ln" x1="260" y1="76" x2="260" y2="100" marker-end="url(#ar3)"/>
+
+      <rect class="b-blue" x="40" y="102" width="440" height="64" rx="8"/><text class="t" x="56" y="128">1 · Normalize</text><text class="m" x="56" y="148">lower-case, strip accents and punctuation, drop edition words</text>
+      <text class="m" x="510" y="124">candidate spellings, each tagged with why:</text><text class="m" x="510" y="142">raw · cleaned (locale, editions, version) ·</text><text class="m" x="510" y="158">vendor word removed · vendor rule · rollup</text>
+      <line class="ln" x1="260" y1="168" x2="260" y2="192" marker-end="url(#ar3)"/>
+
+      <rect class="b-blue" x="40" y="194" width="440" height="64" rx="8"/><text class="t" x="56" y="220">2 · Alias table, then exact lookup</text><text class="m" x="56" y="240">human decisions first, then hash lookup in 12,012 names</text>
+      <text class="m" x="510" y="216">several products share a name?</text><text class="m" x="510" y="234">vendor agrees first, then official vendor feed,</text><text class="m" x="510" y="250">then Red Hat, then endoflife.date</text>
+      <line class="ln" x1="260" y1="260" x2="260" y2="284" marker-end="url(#ar3)"/><text class="m" x="268" y="276">no hit</text>
+
+      <rect class="b-warn" x="40" y="286" width="440" height="64" rx="8"/><text class="t" x="56" y="312">3 · Fuzzy search</text><text class="m" x="56" y="332">only without an exact hit · token-sort ratio · top 3 per candidate</text>
+      <text class="m" x="510" y="308">raw and cleaned spellings only; digits must agree</text><text class="m" x="510" y="326">vendor agrees +4, conflicts −6</text><text class="m" x="510" y="342">short names −8 to −15; under 85 after that: dropped</text>
+      <line class="ln" x1="260" y1="352" x2="260" y2="376" marker-end="url(#ar3)"/>
+      <path class="ln" d="M40,226 H18 V408 H36" marker-end="url(#ar3)"/><text class="m" x="32" y="320" transform="rotate(-90 32 320)" text-anchor="middle">exact hit</text>
+
+      <rect class="b-ok" x="40" y="378" width="440" height="64" rx="8"/><text class="t" x="56" y="404">4 · Decision</text><text class="m" x="56" y="424">≥ 90 accept · 85 to 90 human review · below 85 unmatched</text>
+      <text class="m" x="510" y="400">exact hit scores 98 (93 if the name was ambiguous)</text><text class="m" x="510" y="418">unmatched rows still continue to step 6</text>
+      <line class="ln" x1="260" y1="444" x2="260" y2="468" marker-end="url(#ar3)"/>
+
+      <rect class="b-ok" x="40" y="470" width="440" height="64" rx="8"/><text class="t" x="56" y="496">5 · Version to release cycle</text><text class="m" x="56" y="516">3.8.10 → 3.8 → 3 · epoch stripped · “7.x” · name · single model</text>
+      <text class="m" x="510" y="492">ambiguous versions are flagged for review,</text><text class="m" x="510" y="510">never guessed silently (see the table below)</text>
+      <line class="ln" x1="260" y1="536" x2="260" y2="560" marker-end="url(#ar3)"/>
+
+      <rect class="b-ok" x="40" y="562" width="440" height="64" rx="8"/><text class="t" x="56" y="588">6 · Lifecycle status</text><text class="m" x="56" y="608">supported → maintenance → extended-only → end of life</text>
+      <text class="m" x="510" y="584">dates compared with today; days to EOL;</text><text class="m" x="510" y="602">newest supported cycle as the upgrade target</text>
+      <line class="ln" x1="260" y1="628" x2="260" y2="652" marker-end="url(#ar3)"/>
+
+      <rect class="b-vio" x="40" y="654" width="440" height="64" rx="8"/><text class="t" x="56" y="680">7 · NVD and KEV exposure</text><text class="m" x="56" y="700">find vendor:product in NVD, test the version against affected ranges</text>
+      <text class="m" x="510" y="676">trust: lifecycle CPE high · name + vendor medium</text><text class="m" x="510" y="694">name only low · plus KEV, ransomware flag, EPSS</text>
+      <line class="ln" x1="260" y1="720" x2="260" y2="744" marker-end="url(#ar3)"/>
+      <rect class="b-grey" x="40" y="746" width="440" height="64" rx="8"/><text class="t" x="56" y="772">Enriched row</text><text class="m" x="56" y="792">product · cycle · status · EOL date · CVEs · method · confidence · review reason</text>
+    </svg></div>
+    <figcaption>The cascade for one row. The left-hand bypass shows that an exact hit skips fuzzy search. The notes on the right are the actual rules in <code>cmdb_enrich.py</code>.</figcaption>
+  </figure>
+
+  <h3>Candidate spellings and the guard on each</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Kind</th><th>What it does</th><th>Example</th><th>Guard</th></tr></thead>
+    <tbody>
+      <tr><td><code>raw</code></td><td>The name as typed, normalized</td><td><code>windows server 2016 standard</code></td><td>none</td></tr>
+      <tr><td><code>cleaned</code></td><td>Removes locale, edition words and an embedded version</td><td><code>Mozilla Firefox ESR (hu)</code> → <code>mozilla firefox</code></td><td>none; also used for fuzzy search</td></tr>
+      <tr><td><code>vstrip</code></td><td>Removes the vendor word, if 5 or more characters remain</td><td><code>mozilla firefox</code> → <code>firefox</code></td><td>exact lookup only; vendor must not contradict</td></tr>
+      <tr><td><code>rule</code></td><td>Vendor naming habits</td><td><code>Microsoft ASP.NET Core Runtime 8.0</code> → <code>.net</code></td><td>exact only, confidence 95, vendor guard</td></tr>
+      <tr><td><code>rollup</code></td><td>Debian or RPM sub-package → parent product</td><td><code>libssl3</code> → <code>openssl</code>, <code>postgresql-doc-14</code> → <code>postgresql</code></td><td>exact only, confidence 92</td></tr>
+      <tr><td><code>rollup-lang</code></td><td>Language binding named after its upstream module</td><td><code>python-django-doc</code> → <code>django</code></td><td>exact only, confidence 91; never matches an OS, language or device, so <code>python3-debian</code> cannot become Debian</td></tr>
+    </tbody></table></div>
+
+  <h3>Fuzzy scores and where the lines fall</h3>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 900 140" role="img" aria-label="Score scale from 70 to 100. Below 85 is rejected, 85 to 90 goes to review, 90 and above is accepted. Marked examples: Mage to Mageia 74.0 rejected, OpenRA to OpenAI API Models 83.3 rejected, Firefox ESR th 85.1 review, Firefox hu 94.9 accepted, QFX5100-48S against QFX5110-48S 94.9 blocked by the digit guard.">
+      <rect class="b-bad" x="40" y="60" width="410" height="18" rx="3"/><rect class="b-warn" x="450" y="60" width="137" height="18" rx="3"/><rect class="b-ok" x="587" y="60" width="273" height="18" rx="3"/>
+      <text class="m" x="46" y="74">rejected</text><text class="m" x="456" y="74">review</text><text class="m" x="593" y="74">auto-accept</text>
+      <g class="m"><text x="40" y="96">70</text><text x="446" y="96">85</text><text x="583" y="96">90</text><text x="850" y="96">100</text></g>
+      <circle class="c-bad" cx="149" cy="69" r="5"/><line class="ln" x1="149" y1="62" x2="149" y2="44"/><text class="m" x="149" y="38">74.0  Mage → Mageia</text>
+      <circle class="c-bad" cx="403" cy="69" r="5"/><line class="ln" x1="403" y1="76" x2="403" y2="112"/><text class="m" x="397" y="126" text-anchor="end">83.3  OpenRA → OpenAI API Models</text>
+      <circle class="c-warn" cx="453" cy="69" r="5"/><line class="ln" x1="453" y1="62" x2="453" y2="44"/><text class="m" x="453" y="38">85.1  Firefox ESR (th) → Firefox</text>
+      <circle class="c-ok" cx="721" cy="69" r="5"/><line class="ln" x1="721" y1="62" x2="721" y2="44"/><text class="m" x="721" y="38">94.9  Firefox (hu) → Firefox</text>
+      <circle cx="721" cy="69" r="9" fill="none" stroke="currentColor" stroke-width="1.4" style="color:var(--bad)" transform="translate(0,0)"/>
+      <line class="ln" x1="721" y1="78" x2="721" y2="112"/><text class="m" x="880" y="126" text-anchor="end">94.9  QFX5100-48S ≈ QFX5110-48S, refused: digits differ</text>
+    </svg></div>
+    <figcaption>Real scores from runs on this project. The two lines at 94.9 are why the digit guard exists: a near-identical model number scores high but is a different product.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Version to release cycle</h3>
+      <div class="tbl" style="border:0"><table>
+        <thead><tr><th>Input</th><th>Rule</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td><code>3.8.10</code></td><td>longest dotted prefix</td><td>cycle 3.8</td></tr>
+          <tr><td><code>1:2.3-1ubuntu2</code></td><td>epoch stripped</td><td>cycle 2.3</td></tr>
+          <tr><td><code>7.0.3</code></td><td>“7.x” also answers to 7</td><td>cycle 7.x</td></tr>
+          <tr><td><code>10.0.14393</code> + “Windows Server 2016”</td><td>take it from the name</td><td>cycle 2016</td></tr>
+          <tr><td>hardware model</td><td>only one cycle exists</td><td>that cycle</td></tr>
+          <tr><td><code>8</code> with cycles 8.0, 8.1 …</td><td>newest 8.x, <b>flagged</b></td><td>review</td></tr>
+          <tr><td>Exchange 2013, service pack unknown</td><td>product-level end date, <b>flagged</b></td><td>review</td></tr>
+        </tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Lifecycle status, by example</h3>
+      <p class="muted">RHEL 9, dates from the Red Hat API, compared with 6 Nov 2026.</p>
+      <svg viewBox="0 0 440 150" role="img" aria-label="RHEL 9 timeline: supported until May 2027, maintenance until May 2032, paid extended support until May 2036, then end of life. Today is November 2026, inside the supported span." style="width:100%;height:auto">
+        <rect class="b-ok" x="20" y="44" width="110" height="22"/><rect class="b-warn" x="130" y="44" width="110" height="22"/><rect style="fill:var(--bad-soft);stroke:var(--bad);stroke-width:1.2" x="240" y="44" width="88" height="22"/><rect class="b-bad" x="328" y="44" width="92" height="22"/>
+        <text class="m" x="24" y="38">SUPPORTED</text><text class="m" x="134" y="38">MAINTENANCE_ONLY</text><text class="m" x="244" y="82">EXTENDED_ONLY</text><text class="m" x="332" y="38">EOL</text>
+        <g class="m"><text x="20" y="108" text-anchor="middle">2022</text><text x="130" y="108" text-anchor="middle">2027</text><text x="240" y="108" text-anchor="middle">2032</text><text x="328" y="108" text-anchor="middle">2036</text></g>
+        <line class="ln" x1="20" y1="70" x2="20" y2="96"/><line class="ln" x1="130" y1="70" x2="130" y2="96"/><line class="ln" x1="240" y1="70" x2="240" y2="96"/><line class="ln" x1="328" y1="70" x2="328" y2="96"/>
+        <path class="c-acc" d="M121,118 l5,9 h-10 z"/><text class="m tx-acc" x="121" y="142" text-anchor="middle" style="fill:var(--accent)">today</text>
+      </svg>
+      <p class="muted" style="font-size:.86rem">Full support ends 2027-05-31, maintenance 2032-05-31, the paid ELS add-on 2036-05-31. Only the first interval is free of risk.</p>
+    </div>
+  </div>
+
+  <div class="note"><b>What the matcher refuses to do.</b> It never invents a date. If the product matches but the version does not, the row keeps the product and gets a review reason. In-house applications are expected to stay unmatched, and rows with no vendor are only matched on long, unambiguous names.</div>
+</section>
+
+<!-- ============================ RESULTS ============================ -->
+<section id="results">
+  <h2>What the matcher achieves today</h2>
+  <p class="lead">“Sanitized” means matched with confidence of at least 90 and a resolved release cycle, so name, vendor and cycle are canonical and need no review.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Real public inventory <span class="muted" style="font-weight:400">· 29,997 rows, no answer key</span></h3>
+      <div class="bars" role="list">
+        <div class="bar" role="listitem"><span>All rows</span><span class="track"><span class="fill" style="display:block;width:100%;background:var(--muted)"></span></span><span class="v">29,997 · 100%</span></div>
+        <div class="bar" role="listitem"><span>Matched to a lifecycle product</span><span class="track"><span class="fill" style="display:block;width:3.5%;min-width:3px;background:var(--accent)"></span></span><span class="v">1,062 · 3.5%</span></div>
+        <div class="bar" role="listitem"><span>… sanitized</span><span class="track"><span class="fill" style="display:block;width:3%;min-width:3px;background:var(--ok)"></span></span><span class="v">905 · 3.0%</span></div>
+        <div class="bar" role="listitem"><span>Identified in NVD</span><span class="track"><span class="fill" style="display:block;width:10.4%;background:var(--vuln)"></span></span><span class="v">3,133 · 10.4%</span></div>
+        <div class="bar" role="listitem"><span>… trusted NVD match</span><span class="track"><span class="fill" style="display:block;width:6.9%;background:var(--vuln)"></span></span><span class="v">2,069 · 6.9%</span></div>
+        <div class="bar" role="listitem"><span>… CVEs applicable to the version</span><span class="track"><span class="fill" style="display:block;width:3.8%;min-width:3px;background:var(--vuln)"></span></span><span class="v">1,127 · 3.8%</span></div>
+      </div>
+      <p class="muted" style="font-size:.86rem">Still low because of the data: these catalogues are long tail. 7,202 rows have no vendor, 5,223 unmatched rows are Ubuntu packages, and most indie tools have no published lifecycle at all.</p>
+    </div>
+    <div class="card">
+      <h3>Synthetic CMDB <span class="muted" style="font-weight:400">· 5,000 rows, with answer key</span></h3>
+      <div class="bars">
+        <div class="bar"><span>Correct product</span><span class="track"><span class="fill" style="display:block;width:98.3%;background:var(--ok)"></span></span><span class="v">98.3%</span></div>
+        <div class="bar"><span>Precision of auto-accepted</span><span class="track"><span class="fill" style="display:block;width:99.6%;background:var(--ok)"></span></span><span class="v">99.6%</span></div>
+        <div class="bar"><span>Auto-accepted rows</span><span class="track"><span class="fill" style="display:block;width:76.1%;background:var(--accent)"></span></span><span class="v">76.1%</span></div>
+        <div class="bar"><span>Correct release cycle</span><span class="track"><span class="fill" style="display:block;width:78%;background:var(--warn)"></span></span><span class="v">78.0%</span></div>
+      </div>
+      <p class="muted" style="font-size:.86rem">Measured before the vendor feeds and before the three latest improvements, and on noise my own generator creates, so read it as “the logic works”, not as a promise for your data. Cycle accuracy is lower because 12% of versions were blanked and many others were major-only.</p>
+    </div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Reference source</th><th class="num">Reference products</th><th class="num">Rows matched</th><th class="num">Sanitized</th><th class="num">Unsupported</th></tr></thead>
+    <tbody>
+      <tr><td>endoflife.date</td><td class="num">489</td><td class="num">1,003</td><td class="num">857</td><td class="num">448</td></tr>
+      <tr><td>Microsoft</td><td class="num">826</td><td class="num">58</td><td class="num">48</td><td class="num">15</td></tr>
+      <tr><td>Juniper · Red Hat · VMware</td><td class="num">616 · 236 · 3</td><td class="num">0 · 1 · 0</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td>NVD (identified)</td><td class="num">121,719</td><td class="num">3,133</td><td class="num">2,069</td><td class="num">n/a</td></tr>
+      <tr><td>CISA KEV</td><td class="num">96 products</td><td class="num">501</td><td class="num">n/a</td><td class="num">173</td></tr>
+    </tbody></table></div>
+  <p class="muted">The vendor feeds barely register here because winget, Homebrew and Ubuntu hold almost no network hardware or VMware. A 15-row hand-made test shows what they do: Juniper <code>EX3400-48P</code> resolves to its bulletin (EOL 2032-04-30); Windows Server 2012 R2 is EOL with paid ESU that ended 2026-10-14; SQL Server 2014 reads as extended-support only; Cisco and NetApp models correctly report “no source”.</p>
+</section>
+
+<!-- ============================ IMPROVE ============================ -->
+<section id="improve">
+  <h2>How to improve it</h2>
+  <p class="lead">Separate two kinds of miss before fixing anything. “No lifecycle exists for this product” cannot be solved by better matching. “The product exists but the name did not match” can.</p>
+  <h3>Shipped in this iteration, measured on the 29,997 real rows</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Measure</th><th class="num">Before</th><th class="num">After</th><th class="num">Change</th></tr></thead>
+    <tbody>
+      <tr><td>Matched to a lifecycle product</td><td class="num">796 · 2.7%</td><td class="num">1,062 · 3.5%</td><td class="num">+33%</td></tr>
+      <tr><td>Sanitized (no review needed)</td><td class="num">535 · 1.8%</td><td class="num">905 · 3.0%</td><td class="num">+69%</td></tr>
+      <tr><td>Identified in NVD</td><td class="num">1,799 · 6.0%</td><td class="num">3,133 · 10.4%</td><td class="num">+74%</td></tr>
+      <tr><td>Trusted NVD match</td><td class="num">1,204</td><td class="num">2,069</td><td class="num">+72%</td></tr>
+      <tr><td>With CVEs applicable to the version</td><td class="num">559</td><td class="num">1,127</td><td class="num">+102%</td></tr>
+    </tbody></table></div>
+  <div class="grid2">
+    <div class="card"><h3><span class="tag t-ok">shipped</span>Sub-package rollup</h3>
+      <p>95 rows now match through it: <code>libssl3</code> → OpenSSL, <code>postgresql-doc-14</code> → PostgreSQL, <code>libpython3.10-minimal</code> → Python.</p>
+      <ul><li>Strips Debian and RPM suffixes (<code>-dev</code>, <code>-doc</code>, <code>-utils</code>), version tokens and library soname digits.</li><li>A short explicit list covers gcc, glibc, the Linux kernel, OpenSSL, PostgreSQL and a few more.</li><li>Language bindings are guarded: <code>python3-debian</code> can never become Debian.</li></ul></div>
+    <div class="card"><h3><span class="tag t-ok">shipped</span>Vendor-aware name rules</h3>
+      <p>173 rows match through vendor rules and 138 more through cleaning: <code>Mozilla Firefox (hu)</code>, <code>Firefox Developer Edition (ach)</code>, .NET runtimes, <code>Visual Studio BuildTools 2019</code>, <code>Java(TM) SE Development Kit 23</code>.</p>
+      <ul><li>Removes locale codes, edition words and the vendor's own name from the product.</li><li>Rules for .NET, Visual Studio, Java SE and Firefox or Thunderbird.</li><li>Guessed spellings are used for exact lookup only, never for fuzzy search.</li></ul></div>
+    <div class="card"><h3><span class="tag t-ok">shipped</span>Alias table and review loop</h3>
+      <p>The new Review queue tab lists unsure rows grouped by spelling, biggest first.</p>
+      <ul><li>Three actions: accept the suggestion, map to another product, or mark as not a catalogue product.</li><li>Each decision is saved to <code>aliases.csv</code> and wins over every rule.</li><li>Only the affected rows are re-matched. Tested: one “not a product” decision changed one row, a mapping gave method <code>alias</code> with confidence 100, and all other rows stayed identical.</li></ul></div>
+    <div class="card"><h3><span class="tag t-warn">side effect</span>132 earlier matches were dropped</h3>
+      <p>A stricter rule for short names and an 85 floor after penalties removed fuzzy matches that were wrong, such as Scalar → Scala, Akiflow → Apache Airflow and Steam → CentOS Stream.</p>
+      <p class="muted">I checked 30 of the 132. All 30 were wrong or doubtful, so the matched count rose by a net 266 while precision improved.</p></div>
+  </div>
+
+  <h3>What is left to improve</h3>
+  <figure>
+    <div class="fig"><svg viewBox="0 0 760 420" role="img" aria-label="Improvement ideas placed by estimated effort and impact. Low effort and high impact: sub-package rollup. High impact: new sources. Medium: embeddings, build-number tables, alias table. Higher effort: LLM extraction of hardware bulletins." style="min-width:640px">
+      <rect class="b-grey" x="60" y="20" width="680" height="340" rx="4" style="fill:var(--surface)"/>
+      <line class="dash" x1="400" y1="20" x2="400" y2="360"/><line class="dash" x1="60" y1="190" x2="740" y2="190"/>
+      <text class="h" x="60" y="384">LOW EFFORT</text><text class="h" x="740" y="384" text-anchor="end">HIGH EFFORT</text>
+      <text class="h" x="14" y="360" transform="rotate(-90 14 360)">LOWER IMPACT</text><text class="h" x="14" y="130" transform="rotate(-90 14 130)">HIGHER IMPACT</text>
+      <g>
+        <circle class="c-ok" cx="120" cy="230" r="7"/><text class="t" x="134" y="234">Criticality-weighted metrics</text>
+        <circle class="c-warn" cx="470" cy="215" r="7"/><text class="t" x="484" y="219">Embedding candidates</text>
+        <circle class="c-warn" cx="450" cy="285" r="7"/><text class="t" x="464" y="289">Build number → release</text>
+        <circle class="c-bad" cx="540" cy="70" r="7"/><text class="t" x="554" y="74" style="font-size:12.5px">New sources</text>
+        <circle class="c-bad" cx="650" cy="135" r="7"/><text class="t" x="636" y="139" text-anchor="end">LLM bulletin extraction</text>
+      </g>
+    </svg></div>
+    <figcaption>The three shipped items are no longer plotted. Positions are my estimates, to be re-ranked once real CMDB rows are available. Green items are deterministic and cheap, the amber ones use AI as a helper, the red ones need data or credentials from outside.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Improvement</th><th>Evidence in the current results</th><th>How</th></tr></thead>
+    <tbody>
+      <tr><td><b>Roll sub-packages up</b> <span class="tag t-ok">shipped</span></td><td>About 60% of unmatched Ubuntu rows are <code>lib*</code>, <code>python3-*</code>, <code>-dev</code>, <code>-doc</code></td><td>Map to the parent product through source-package and purl names, by rule</td></tr>
+      <tr><td><b>Vendor-aware name rules</b> <span class="tag t-ok">shipped</span></td><td>359 unmatched Microsoft and 376 Mozilla rows, “Mozilla Firefox (hu)” style</td><td>Strip the vendor and locale from the name, add vendor-specific patterns</td></tr>
+      <tr><td><b>Alias table with a review loop</b> <span class="tag t-ok">shipped</span></td><td>949 rows sit in the review queue on the synthetic set</td><td>Each human decision becomes a permanent alias, so review work shrinks over time</td></tr>
+      <tr><td><b>Embedding candidates</b></td><td><code>Java(TM) SE Development Kit 8</code> and the typo <code>Firefxo ESR</code> fail on text alone</td><td>A local embedding model proposes the top 5; the existing thresholds and review step decide</td></tr>
+      <tr><td><b>Build number → release</b></td><td>Windows 10 <code>10.0.19044</code> stays “version unknown”</td><td>Lookup tables built once from vendor release notes; reject answers not in the reference</td></tr>
+      <tr><td><b>More sources</b></td><td>Hardware rows without a feed report “no source”</td><td>Cisco credentials, NetApp and VMware portal exports, Oracle, Dell, HPE bulletins, Debian and Ubuntu support dates</td></tr>
+      <tr><td><b>Measure what matters</b></td><td>2.7% of rows says little when most rows are indie tools</td><td>Weight coverage by asset criticality and split “no lifecycle published” from “matching failed”</td></tr>
+      <tr><td><b>LLM extraction of bulletins</b></td><td>Hardware EOL lives in PDFs and HTML notices</td><td>Structured extraction into the nine-field record, with the source quote stored and a sample checked by hand</td></tr>
+    </tbody></table></div>
+  <div class="note"><b>One rule for all AI use.</b> AI maps names and extracts text. It never supplies a date or a CVE from memory. Dates come from the snapshot, with provenance, and a model’s output is a candidate that passes the same thresholds as any other.</div>
+</section>
+
+<!-- ============================ GENERALIZE ============================ -->
+<section id="generalize">
+  <h2>Taking it to a real CMDB and new sources</h2>
+  <p class="lead">The engine already works on any CSV with vendor, product and version. What changes in the real world is the data around it: how you feed it, how you measure it, and how you add sources.</p>
+  <div class="grid2">
+    <div class="card"><h3><span class="tag t-blue">step 1</span>Map your export</h3>
+      <p>Rename columns to <code>vendor, product, version, ci_type, fw_or_pkg</code> and add an asset id. Hardware rows get <code>ci_type = hardware</code>. Nothing else is required.</p></div>
+    <div class="card"><h3><span class="tag t-blue">step 2</span>Run it where the data lives</h3>
+      <p>Only the snapshot travels in. The CMDB never leaves your network, which matches your security constraint. Refresh the snapshot monthly with <code>run_all.sh</code> on a connected machine.</p></div>
+    <div class="card"><h3><span class="tag t-blue">step 3</span>Label a small sample</h3>
+      <p>Hand-check 200 to 300 rows, weighted toward production and critical assets. Compute precision and recall at the thresholds, then tune <code>AUTO</code> and <code>REVIEW</code> on that.</p></div>
+    <div class="card"><h3><span class="tag t-blue">step 4</span>Work the review queue</h3>
+      <p>Use the Review queue tab: each decision is saved to <code>aliases.csv</code> and applies before any rule. Expect the first pass to be heavy and each later one lighter.</p></div>
+    <div class="card"><h3><span class="tag t-blue">step 5</span>Write back and monitor</h3>
+      <p>Push lifecycle status, EOL date, CVE counts and the match confidence into the CMDB. Track auto-accept rate, sampled precision, queue size and snapshot age on the coverage tab.</p></div>
+    <div class="card"><h3><span class="tag t-blue">step 6</span>Keep provenance</h3>
+      <p>Store the source, URL and fetch date of every date you display. When a vendor moves an end-of-support date, you can show where the old one came from.</p></div>
+  </div>
+
+  <figure>
+    <div class="fig"><svg viewBox="0 0 960 250" role="img" aria-label="Adding a new source: any collector (API call, scraper or manual CSV) writes records in the common nine-field schema into the snapshot, the loader indexes them, and the matcher and coverage tab pick them up with no other code change.">
+      <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ar"/></marker></defs>
+      <rect class="b-teal" x="10" y="24" width="250" height="170" rx="8"/><text class="h" x="24" y="46">1 · COLLECTOR (YOU WRITE)</text>
+      <text class="t" x="24" y="76">API call</text><text class="t" x="24" y="104">HTML scraper</text><text class="t" x="24" y="132">PDF extraction (LLM)</text><text class="t" x="24" y="160">Manual CSV export</text>
+      <line class="ln" x1="262" y1="110" x2="316" y2="110" marker-end="url(#ar4)"/><text class="m" x="266" y="100">emit</text>
+      <rect class="b-blue" x="320" y="24" width="300" height="170" rx="8"/><text class="h" x="334" y="46">2 · COMMON RECORD</text>
+      <text class="mono" x="334" y="74">vendor      "juniper"</text><text class="mono" x="334" y="92">product     "EX3400"</text><text class="mono" x="334" y="110">cycle       "EX3400"</text><text class="mono" x="334" y="128">aliases     [SKUs…]</text>
+      <text class="mono" x="334" y="146">release_date · end_sale</text><text class="mono" x="334" y="164">end_support_full · eol</text><text class="mono" x="334" y="182">url · source</text>
+      <line class="ln" x1="622" y1="110" x2="676" y2="110" marker-end="url(#ar4)"/><text class="m" x="626" y="100">load</text>
+      <rect class="b-ok" x="680" y="24" width="270" height="170" rx="8"/><text class="h" x="694" y="46">3 · NOTHING ELSE TO CHANGE</text>
+      <text class="t" x="694" y="76">names enter the index</text><text class="t" x="694" y="104">vendor feed wins ties</text><text class="t" x="694" y="132">rows show the new source</text><text class="t" x="694" y="160">coverage tab counts it</text>
+      <text class="m" x="10" y="226">The Microsoft, Juniper, VMware and manual collectors all follow this contract, so a fourth or fifth source costs one function.</text>
+    </svg></div>
+    <figcaption>A new source is a collector plus the shared record. It joins the index without any change to the matching code.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div class="card"><h3>Candidate sources, not yet built</h3>
+      <ul><li>Oracle, Dell, HPE, Lenovo, Fortinet and Palo Alto hardware and software bulletins</li><li>Debian and Ubuntu release support dates</li><li>SUSE, Citrix, SAP, Atlassian and Adobe lifecycle pages</li><li>NVD CPE dictionary, for naming and hardware identity, with a free API key</li></ul></div>
+    <div class="card"><h3>Open risks to plan for</h3>
+      <ul><li>Scrapers break when a page layout changes, so check record counts after every run and review each site’s terms.</li><li>NVD entries without version bounds count as “all versions”, which overstates old CVEs.</li><li>Name-only NVD matches are low trust and should be verified.</li><li>The Cisco collector has never run against the live API.</li></ul></div>
+  </div>
+</section>
+
+<footer>
+  Everything lives in <code>/home/aminediab/cmdb_lifecycle/</code>: <code>fetch_snapshot.py</code>, <code>fetch_vendors.py</code>, <code>fetch_inventory.py</code>, <code>build_nvd_index.py</code>, <code>cmdb_enrich.py</code>, <code>app.py</code>, <code>run_all.sh</code>. Figures are from the run on 10 Nov 2026.
+</footer>
+</div>
