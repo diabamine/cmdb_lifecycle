@@ -45,6 +45,7 @@ tab1, tab_cov, tab_rev, tab2, tab3 = st.tabs(["🔎 Match explorer", "🧭 Sourc
 with tab1:
     # example picker: real rows from the public inventory (fills the 4 inputs below)
     ex = pd.read_csv(str(INVENTORY), keep_default_na=False, dtype=str).sample(300, random_state=1).reset_index(drop=True)
+    if "source" not in ex: ex["source"] = "inventory"
     def fill():
         r = ex.loc[st.session_state.ex_i]
         st.session_state.update(v=r["vendor"], p=r["product"], ver=r["version"], pk=r["fw_or_pkg"])
