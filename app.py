@@ -31,10 +31,11 @@ ALIASES = ce.Path("aliases.csv"); RAW_COLS = ["asset_id", "source", "ci_type", "
 
 # ---- which results to analyse: own upload > precomputed full run > live sample
 FULL = ce.Path("out_real/cmdb_enriched.csv")
+INVENTORY = ce.Path("raw/inventory.csv") if ce.Path("raw/inventory.csv").exists() else ce.Path("data/cmdb_synthetic.csv")
 up = st.sidebar.file_uploader("Your own CSV (vendor, product, version [, fw_or_pkg])", type="csv")
 if up: df = enrich_csv(up)
 elif FULL.exists() and st.sidebar.checkbox("Use the complete precomputed run (out_real/)", True): df = load_full(str(FULL), FULL.stat().st_mtime)
-else: df = enrich_csv("raw/inventory.csv", int(st.sidebar.number_input("Sample size (live matching)", 1000, 30000, 6000, step=1000)))
+else: df = enrich_csv(str(INVENTORY), int(st.sidebar.number_input("Sample size (live matching)", 1000, 30000, 6000, step=1000)))
 if "source" not in df: df["source"] = "upload"
 st.sidebar.caption(f"Analysing {len(df):,} rows")
 
@@ -43,7 +44,7 @@ tab1, tab_cov, tab_rev, tab2, tab3 = st.tabs(["🔎 Match explorer", "🧭 Sourc
 # =============================== TAB 1: type a component, watch the cascade ===============================
 with tab1:
     # example picker: real rows from the public inventory (fills the 4 inputs below)
-    ex = pd.read_csv("raw/inventory.csv", keep_default_na=False, dtype=str).sample(300, random_state=1).reset_index(drop=True)
+    ex = pd.read_csv(str(INVENTORY), keep_default_na=False, dtype=str).sample(300, random_state=1).reset_index(drop=True)
     def fill():
         r = ex.loc[st.session_state.ex_i]
         st.session_state.update(v=r["vendor"], p=r["product"], ver=r["version"], pk=r["fw_or_pkg"])
