@@ -40,7 +40,7 @@ def iso(s):
     """'10/30/2026', '1/12/2022 6:59:59 AM', 'April 2, 2020', '2026-01-31' -> '2026-01-31'; anything else -> ''"""
     s = (s or "").strip()
     for fmt in ("%m/%d/%Y %I:%M:%S %p", "%m/%d/%Y", "%B %d, %Y", "%b %d, %Y", "%Y-%m-%d"):
-        try: return datetime.strptime(s[:len(s)], fmt).strftime("%Y-%m-%d")
+        try: return datetime.strptime(s, fmt).strftime("%Y-%m-%d")
         except ValueError: pass
     return ""
 def rec(vendor, product, cycle, source, url, category="", aliases=(), release="", end_sale="", end_full="", eol=""):
@@ -150,12 +150,17 @@ COLLECTORS = dict(microsoft=microsoft, juniper=juniper, vmware=vmware, cisco=cis
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--out", default="snapshot"); ap.add_argument("--only", nargs="*", choices=list(COLLECTORS))
     a = ap.parse_args(); out = Path(a.out) / "vendor_lifecycle.json"
-    old = json.load(open(out)) if out.exists() and a.only else []       # --only refreshes just those vendors
+    if out.exists() and a.only:
+        with open(out) as fh: old = json.load(fh)
+    else:
+        old = []
     run = a.only or [k for k in COLLECTORS if k != "cisco"]
     old = [r for r in old if r["source"].split(":")[0] not in {COLLECTORS[k].__name__ for k in run} and r["vendor"] not in run]
     new = []
     for k in run:
         got = COLLECTORS[k](); print(f"{k}: {len(got)} records"); new += got
-    Path(a.out).mkdir(exist_ok=True); json.dump(old + new, open(out, "w"), indent=0); print("->", out, len(old + new), "records")
+    Path(a.out).mkdir(exist_ok=True)
+    with open(out, "w") as fh: json.dump(old + new, fh, indent=0)
+    print("->", out, len(old + new), "records")
 
 if __name__ == "__main__": main()

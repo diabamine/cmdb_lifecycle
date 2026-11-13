@@ -90,7 +90,7 @@ with tab1:
             d[2].metric("Method", res["match_method"]); d[3].metric("Confidence", res["match_confidence"])
             st.write("Review flag:", res["review"] or "✅ none (auto-accepted)", "| data-quality flags:", res["dq_flags"] or "—")
 
-            p = next(q for q in ref.prods.values() if q["label"] == res["matched_product"] and q["source"] == res["matched_source"])
+            p = next((q for q in ref.prods.values() if q["label"] == res["matched_product"] and q["source"] == res["matched_source"]), None)
             st.markdown("#### 5 · Version → release cycle")
             st.write(f"`{version or '(empty)'}` → cycle **{res['matched_cycle'] or '?'}**, match type `{res['cycle_match']}` "
                      "(longest dotted prefix: 3.8.10 → 3.8 → 3; epoch `1:` stripped)")

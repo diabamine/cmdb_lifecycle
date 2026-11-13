@@ -58,7 +58,8 @@ class Ref:
             k = norm(n)
             if k: self.index[k].add(p["id"])
     def _load_endoflife(self, f):
-        for x in json.load(open(f))["result"]:
+        with open(f) as fh: data = json.load(fh)
+        for x in data["result"]:
             vend, cpes = "", []
             for i in x.get("identifiers", []):
                 if i["type"] == "cpe" and i["id"].startswith("cpe:2.3"): vend = i["id"].split(":")[3]; cpes.append(tuple(i["id"].split(":")[3:5]))
@@ -75,7 +76,8 @@ class Ref:
             if vend: names += [f"{vend} {x['name'].replace('-', ' ')}"]
             self._add(p, names)
     def _load_redhat(self, f):
-        for pr in json.load(open(f))["data"]:
+        with open(f) as fh: data = json.load(fh)
+        for pr in data["data"]:
             pt = {a["name"]: a["ptype"] for a in pr["all_phases"]}; rel = []
             for v in pr["versions"]:
                 ph = v.get("phases", []); ga = next((q for q in ph if "general availability" in q["name"].lower()), None)
@@ -91,7 +93,8 @@ class Ref:
         """Vendor feeds from fetch_vendors.py (Microsoft, Juniper, Cisco, VMware, manual csv): one product per (vendor, product)."""
         if not Path(f).exists(): return
         groups = defaultdict(list)
-        for r in json.load(open(f)): groups[(r["vendor"], r["product"])].append(r)
+        with open(f) as fh: data = json.load(fh)
+        for r in data: groups[(r["vendor"], r["product"])].append(r)
         for (vendor, prod), recs in groups.items():
             # paid Extended Security Update rows are not regular cycles: keep them as the product's "extended" end date
             esu = [pdate(r["eol"]) for r in recs if re.search(r"extended security|\besu\b", r["cycle"], re.I)]
@@ -110,7 +113,8 @@ class Ref:
             for line in fh:
                 if line.startswith(("#", "cve")): continue
                 c, e, _ = line.strip().split(","); sc[c] = float(e)
-        for v in json.load(open(kev))["vulnerabilities"]:
+        with open(kev) as fh: data = json.load(fh)
+        for v in data["vulnerabilities"]:
             q = norm(v["product"]); vend = norm_vendor(v["vendorProject"])
             cands = list(self.index.get(q, [])) or [sorted(self.index[k])[0] for k, s, _ in
                     process.extract(norm(v["vendorProject"] + " " + v["product"]), self.keys, scorer=fuzz.token_set_ratio, limit=1, score_cutoff=95)]
@@ -122,7 +126,8 @@ class Ref:
         """Human decisions from the review loop: (vendor key, product key) -> product id, or "-" (= confirmed: not a catalogue product)."""
         self.aliases = {}
         if Path(f).exists():
-            for a in csv.DictReader(open(f, encoding="utf-8")): self.aliases[(norm_vendor(a["vendor"]), norm(a["product"]))] = a["target_id"]
+            with open(f, encoding="utf-8") as fh:
+                for a in csv.DictReader(fh): self.aliases[(norm_vendor(a["vendor"]), norm(a["product"]))] = a["target_id"]
     def _load_nvd(self, f):
         """Open the NVD index; self.nvd_names: normalized product name -> [(vendor, product, n_cve)]."""
         self.nvd = sqlite3.connect(f, check_same_thread=False) if Path(f).exists() else None
@@ -131,6 +136,9 @@ class Ref:
         if self.nvd:
             for v, pr, n in self.nvd.execute("select vendor, product, sum(n_cve) from products group by vendor, product"):
                 self.nvd_names[norm(pr.replace("_", " "))].append((v, pr, n))
+
+    def __del__(self):
+        if self.nvd: self.nvd.close()
 
 # ------------------------------------------------------------------ matching
 # Every derived spelling is tagged with WHY it exists, so a result says how it matched: raw | cleaned | rule | rollup
@@ -237,7 +245,7 @@ def match_cycle(p, version, pkg):
     m = VER_RE.search(v) or (VER_RE.search(re.sub(r"^.*?-(?=\d)", "", pkg)) if pkg else None)
     flat = lambda x: re.sub(r"[\s-]", "", x.lower())
     cyc = {flat(c["cycle"]): c for c in p["releases"]}
-    cyc.update({k[:-2]: c for k, c in list(cyc.items()) if k.endswith(".x")})      # '7.x' also answers to '7'
+    cyc.update({k[:-2]: c for k, c in cyc.items() if k.endswith(".x")})      # '7.x' also answers to '7'
 
     if flat(v) in cyc: return cyc[flat(v)], "name"          # whole string is a cycle name ('2012 r2', '8.6')
     if not m: return None, "no-version"
@@ -395,7 +403,8 @@ def main():
     a = ap.parse_args(); today = date.fromisoformat(a.today) if a.today else date.today()
     ref = Ref(Path(a.snapshot))
     for p in ref.prods.values(): _LAB[p["label"]] = p["name"]
-    rows = list(csv.DictReader(open(a.cmdb))); res = enrich(ref, rows, today)
+    with open(a.cmdb) as fh: rows = list(csv.DictReader(fh))
+    res = enrich(ref, rows, today)
     out = Path(a.out); out.mkdir(exist_ok=True)
     def wr(fn, data):
         with open(out / fn, "w", newline="") as f:
@@ -409,7 +418,8 @@ def main():
     print(f"NVD: identified {len(n)} rows ({len(n)/len(res):.1%}) | with >=1 CVE applicable to the version: {len(v)} | "
           f"critical (CVSS>=9): {sum(1 for r in n if r['nvd_critical'] not in ('', 0))} | affected by a KEV CVE: {sum(1 for r in n if r['nvd_kev'] not in ('', 0))}")
     if a.truth:
-        S = score(res, list(csv.DictReader(open(a.truth))))
+        with open(a.truth) as fh: truth = list(csv.DictReader(fh))
+        S = score(res, truth)
         pct = lambda x, y: f"{100*x/max(y,1):.1f}%"
         print(f"\nvs ground truth: known-product rows={S['known']}\n  matched {pct(S['known_matched'],S['known'])} | correct product {pct(S['known_correct'],S['known'])} | correct cycle {pct(S['cycle_correct'],S['known'])}"
               f"\n  auto-accepted {pct(S['auto'],S['known'])} of rows, precision of auto-accepted {pct(S['auto_correct'],S['auto'])}"
