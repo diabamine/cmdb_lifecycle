@@ -1,0 +1,28 @@
+{
+ "created_utc": "2026-11-13T18:32:09+00:00",
+ "files": {
+  "endoflife_full.json": {
+   "url": "https://endoflife.date/api/v1/products/full",
+   "bytes": 3043322,
+   "sha256": "67247417b71a575def9e1ae6bc8c81e11cbe23b52da7e9f0ce82765ab6f30838"
+  },
+  "redhat_lifecycle.json": {
+   "url": "https://access.redhat.com/product-life-cycles/api/v1/products",
+   "bytes": 2058902,
+   "sha256": "4ac7ad6c2fc1ee1df4d152a6bcc6909965eb98f3892a24942cbd594771ee4567"
+  },
+  "cisa_kev.json": {
+   "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+   "bytes": 1850831,
+   "sha256": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea"
+  },
+  "epss_scores.csv.gz": {
+   "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
+   "bytes": 2845761,
+   "sha256": "7bf2ccdde4c325bf58893dd213b273fe2b65b251c6425960514b3ef9224748ff"
+  },
+  "nvd/": {
+   "url": "https://github.com/fkie-cad/nvd-json-data-feeds/releases/latest/download"
+  }
+ }
+}
