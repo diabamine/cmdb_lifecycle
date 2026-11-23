@@ -1,0 +1,5 @@
+id,product_id,source,vendor,product,aliases,category,version,release_date,end_sale,end_support,eol,end_extended,is_eol,latest,url,origin
+x,eol:python,endoflife.date,Python Software Foundation,  Python  ,py|Python||py,lang,3.11,2022-10-24,,2024-04-01,2027-10-31,,,3.11.9,,
+x,eol:python,endoflife.date,Python Software Foundation,Python,,lang,3.11,2022-10-24,,,,,,,,
+x,eol:python,endoflife.date,Python Software Foundation,Python,,lang,3.12,10/24/2023,,,2028-10-31T00:00:00Z,,,,,
+x,eol:nothing,endoflife.date,X,,,,1.0,,,,,,,,,

@@ -1,0 +1,5 @@
+id,product_id,source,vendor,product,aliases,category,version,release_date,end_sale,end_support,eol,end_extended,is_eol,latest,url,origin
+x,v:microsoft:Windows Server 2012,microsoft,Microsoft Corporation,Windows Server 2012,,os,2012,,,2018-10-09,2023-10-10,,,,,
+x,v:microsoft:Windows Server 2012,microsoft,Microsoft Corporation,Windows Server 2012,,os,Extended Security Updates Year 3,,,,2026-10-13,,,,,
+x,v:microsoft:Windows Server 2012,microsoft,Microsoft Corporation,Windows Server 2012,,os,ESU Year 1,,,,2024-10-08,,,,,
+x,v:microsoft:SQL 2008,microsoft,Microsoft Corporation,SQL 2008,,db,ESU Year 1,,,,2020-07-14,,,,,
