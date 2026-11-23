@@ -1,3 +1,4 @@
 rapidfuzz>=3.14
 streamlit>=1.50
 pandas>=2.2
+pytest>=8

@@ -30,3 +30,6 @@ aliases.csv
 
 # editor settings
 .vscode/
+
+# Claude Code worktrees
+.claude/

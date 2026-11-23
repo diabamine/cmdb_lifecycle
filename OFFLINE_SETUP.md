@@ -11,8 +11,8 @@ These two files MUST be present for the matcher to work:
 
 | File | Size | Purpose | Created by |
 |------|------|---------|-----------|
-| `snapshot/endoflife_full.json` | 3.0M | 700+ mainstream products (OS, databases, frameworks, languages) | `fetch_snapshot.py --eol` |
-| `snapshot/redhat_lifecycle.json` | 2.0M | Red Hat products | `fetch_snapshot.py --redhat` |
+| `snapshot/endoflife_full.json` | 3.0M | 700+ mainstream products (OS, databases, frameworks, languages) | `python3 -m cmdb.ingest --fetch --only endoflife` |
+| `snapshot/redhat_lifecycle.json` | 2.0M | Red Hat products | `python3 -m cmdb.ingest --fetch --only redhat` |
 
 **Without these:** The app will fail to load—it can't match any products.
 
@@ -21,9 +21,9 @@ These files improve matching accuracy and coverage:
 
 | File | Size | Purpose | Created by | Impact if missing |
 |------|------|---------|-----------|-------------------|
-| `snapshot/vendor_lifecycle.json` | 988K | Microsoft, Juniper, Cisco, VMware, NetApp | `fetch_vendors.py` | ~200 products unavailable; Windows/Juniper/Cisco hardware won't match |
-| `snapshot/cisa_kev.json` | 1.8M | CISA known-exploited vulnerabilities (by product) | `fetch_snapshot.py --kev` | Can't flag exploited CVEs; `kev_cves` / `kev_ransomware` columns empty |
-| `snapshot/epss_scores.csv.gz` | 2.8M | Exploit probability scores for CVEs (paired with KEV) | `fetch_snapshot.py --epss` | Can't show EPSS scores; `epss_max` column empty |
+| `snapshot/vendor_lifecycle.json` | 988K | Microsoft, Juniper, Cisco, VMware, NetApp | `python3 -m cmdb.ingest --fetch` | ~200 products unavailable; Windows/Juniper/Cisco hardware won't match |
+| `snapshot/cisa_kev.json` | 1.8M | CISA known-exploited vulnerabilities (by product) | `python3 -m cmdb.ingest --fetch --only security` | Can't flag exploited CVEs; `kev_cves` / `kev_ransomware` columns empty |
+| `snapshot/epss_scores.csv.gz` | 2.8M | Exploit probability scores for CVEs (paired with KEV) | `python3 -m cmdb.ingest --fetch --only security` | Can't show EPSS scores; `epss_max` column empty |
 
 **Without these:** Matching works, but with reduced vendor coverage and no exploit risk data.
 
@@ -32,8 +32,8 @@ These enhance vulnerability analysis:
 
 | File | Size | Purpose | Created by | Impact if missing |
 |------|------|---------|-----------|-------------------|
-| `snapshot/nvd.sqlite` | 302M | Full NVD index (421k CVEs), indexed by vendor:product:version | `fetch_snapshot.py --nvd` + `build_nvd_index.py` | Can't show version-specific CVEs; `nvd_*` columns empty |
-| `snapshot/nvd/` | included | Staging files for NVD import | `build_nvd_index.py` | Not needed once nvd.sqlite is built |
+| `snapshot/nvd.sqlite` | 302M | Full NVD index (421k CVEs), indexed by vendor:product:version | `python3 -m cmdb.ingest --fetch --only security --nvd` + `tools/build_nvd_index.py` | Can't show version-specific CVEs; `nvd_*` columns empty |
+| `snapshot/nvd/` | included | Staging files for NVD import | `tools/build_nvd_index.py` | Not needed once nvd.sqlite is built |
 
 **Without these:** No version-level CVE details, but product-level EOL/EOS still works.
 
@@ -53,7 +53,7 @@ snapshot/
 
 **Enrich CSV command (no extra features):**
 ```bash
-python3 -I cmdb_enrich.py --snapshot snapshot --cmdb your_data.csv --out output
+python3 -m cmdb.matching --cmdb your_data.csv --out output.csv
 # Produces: matched_product, category, lifecycle_status, eol_date, days_to_eol, etc.
 ```
 
@@ -92,10 +92,10 @@ If you have internet access on one machine, build the snapshot once and transfer
 
 ```bash
 # On internet-connected machine:
-python3 -I fetch_snapshot.py --out snapshot          # 5MB (core only)
-python3 -I fetch_vendors.py --out snapshot           # +1MB (vendors)
-python3 -I fetch_snapshot.py --out snapshot --nvd    # +305MB (NVD)
-python3 -I build_nvd_index.py --snapshot snapshot    # Builds nvd.sqlite
+python3 -m cmdb.ingest --fetch --only security endoflife redhat   # 5MB (core only)
+python3 -m cmdb.ingest --fetch                  # all sources incl. vendors
+python3 -m cmdb.ingest --fetch --only security --nvd   # +305MB (NVD)
+python3 tools/build_nvd_index.py snapshot/nvd snapshot/nvd.sqlite   # builds nvd.sqlite
 
 # Transfer snapshot/ folder to offline environment
 scp -r snapshot/ offline-server:/path/to/cmdb_lifecycle/
@@ -105,12 +105,12 @@ scp -r snapshot/ offline-server:/path/to/cmdb_lifecycle/
 
 ```bash
 # Streamlit web UI (recommended for exploration + cleanup)
-.venv/bin/streamlit run app.py
+.venv/bin/streamlit run streamlit_app.py
 
 # Then upload your CSV via the "Your own CSV" uploader
 
 # Or CLI for batch enrichment
-python3 -I cmdb_enrich.py --snapshot snapshot --cmdb your_inventory.csv --out output
+python3 -m cmdb.matching --cmdb your_inventory.csv --out output.csv
 # Produces: cmdb_enriched.csv, review_queue.csv
 ```
 

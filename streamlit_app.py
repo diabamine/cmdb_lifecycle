@@ -120,10 +120,10 @@ def tab_metrics(catalog):
     if results:
         metrics = matching_metrics(results)
         cols = st.columns(3)
-        cols[0].metric("Match rate", f"{metrics['match_rate']:.1%}")
-        cols[1].metric("Auto-accepted", f"{metrics['auto_rate']:.1%}")
-        cols[2].metric("Review", f"{metrics['review_rate']:.1%}")
-        st.bar_chart(pd.Series(metrics["by_method"], name="rows"))
+        cols[0].metric("Match rate", f"{metrics['match_rate']:.1f}%")
+        cols[1].metric("Auto-accepted", f"{metrics['auto_accept_rate']:.1f}%")
+        cols[2].metric("Review", f"{metrics['review_queue_rate']:.1f}%")
+        st.bar_chart(pd.Series(metrics["by_match_method"], name="rows"))
     else:
         st.caption("Run a CSV match to see matching metrics.")
 
@@ -153,7 +153,7 @@ def tab_compare(catalog):
 
     compared = compare_references(rows, references)
     st.dataframe(pd.DataFrame(comparison_summary(compared)), hide_index=True)
-    disagree = [row for row in compared if not row.get("agree")]
+    disagree = [row for row in compared if row.get("agree") in ("partial", "conflict")]
     st.subheader(f"Rows where references disagree ({len(disagree)})")
     st.dataframe(pd.DataFrame(disagree), hide_index=True)
 

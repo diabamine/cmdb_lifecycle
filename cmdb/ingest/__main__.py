@@ -41,6 +41,7 @@ def main() -> int:
     parser.add_argument("--raw", default="snapshot", type=Path, help="raw data directory (default: snapshot)")
     parser.add_argument("--out", default="data/standard", type=Path, help="output directory (default: data/standard)")
     parser.add_argument("--eol-vendors", nargs="+", metavar="SLUG", help="eol.network vendors to list with --fetch")
+    parser.add_argument("--nvd", action="store_true", help="with --fetch: also download the full NVD CVE base (~120 MB)")
     args = parser.parse_args()
 
     names = args.only or [*SOURCES, *FETCH_ONLY]
@@ -55,6 +56,8 @@ def main() -> int:
                     module.fetch(args.raw, args.eol_vendors)
                 else:
                     module.fetch(args.raw)
+                if name == "security" and args.nvd:
+                    module.fetch_nvd(args.raw)
             except Exception as err:      # any failure (also a changed page layout): never lose the other sources
                 print(f"{name}: FETCH FAILED, keeping existing raw data: {err}", file=sys.stderr)
                 failed.append(name)

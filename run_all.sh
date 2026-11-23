@@ -1,10 +1,10 @@
 #!/bin/bash
-# Refresh EVERY source (needs internet), rebuild the offline indexes, then enrich the whole inventory.
+# Refresh every source (needs internet), rebuild the master catalog, then match the public sample inventory.
 set -e
 cd "$(dirname "$0")"
-python3 -I fetch_snapshot.py --out snapshot --nvd                  # endoflife.date, Red Hat, CISA KEV, EPSS, full NVD CVE base
-python3 -I build_nvd_index.py snapshot/nvd snapshot/nvd.sqlite     # NVD -> compact SQLite
-python3 -I fetch_vendors.py --out snapshot                         # Microsoft, Juniper, VMware KB, manual/*.csv (Cisco: set CISCO_CLIENT_ID/SECRET, then --only cisco)
-python3 -I fetch_inventory.py                                      # public real-world inventory (winget, Homebrew, Ubuntu)
-.venv/bin/python -I cmdb_enrich.py --snapshot snapshot --cmdb raw/inventory.csv --out out_real   # full enrichment (~2 min)
+PY=.venv/bin/python
+$PY -m cmdb.ingest --fetch                                           # steps 1: raw -> data/standard/*.csv (Cisco: set CISCO_CLIENT_ID/SECRET)
+$PY -m cmdb.catalog                                                  # step 2: data/master_catalog.csv
+$PY tools/fetch_inventory.py                                         # public real-world inventory (winget, Homebrew, Ubuntu)
+$PY -m cmdb.matching --cmdb raw/inventory.csv --out out_real/cmdb_enriched.csv   # step 3
 echo ALL-DONE
