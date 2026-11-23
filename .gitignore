@@ -10,6 +10,7 @@ out2/
 out_real/
 out_real_before/
 out_vendor/
+reports/
 *.log
 
 # Large files: committed selectively (see OFFLINE_SETUP.md)
@@ -17,6 +18,12 @@ out_vendor/
 # Excluded: nvd.sqlite (302MB) and nvd/ (staging files) - too large for git
 snapshot/nvd.sqlite
 snapshot/nvd/
+
+# secrets (API keys)
+.env
+
+# eol.network data: its terms forbid republishing, and each API key gets watermark records. Keep local, never commit.
+snapshot/eolnetwork/
 
 # human review decisions can contain internal product names: commit deliberately, if at all
 aliases.csv

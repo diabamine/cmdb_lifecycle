@@ -46,7 +46,7 @@ class Ref:
         self.index = defaultdict(set)   # normalized name -> product ids
         self._load_endoflife(snap / "endoflife_full.json")
         self._load_redhat(snap / "redhat_lifecycle.json")
-        self._load_vendors(snap / "vendor_lifecycle.json")
+        for f in sorted(snap.glob("vendor_lifecycle*.json")): self._load_vendors(f)       # vendor_lifecycle.json + vendor_lifecycle_eolnetwork.json (not committed)
         self.keys = list(self.index)
         self._load_kev(snap / "cisa_kev.json", snap / "epss_scores.csv.gz")
         self._load_nvd(snap / "nvd.sqlite")
@@ -99,10 +99,13 @@ class Ref:
             # paid Extended Security Update rows are not regular cycles: keep them as the product's "extended" end date
             esu = [pdate(r["eol"]) for r in recs if re.search(r"extended security|\besu\b", r["cycle"], re.I)]
             recs = [r for r in recs if not re.search(r"extended security|\besu\b", r["cycle"], re.I)] or recs
-            rel = [dict(cycle=r["cycle"], release_date=pdate(r["release_date"]), eoas=pdate(r["end_support_full"]), eol=pdate(r["eol"]), eoes=max((d for d in esu if d), default=None),
-                        is_eol=None, maintained=None, latest=None, lts=None, end_sale=pdate(r["end_sale"])) for r in recs]
+            # optional record fields: end_extended (vendor's own extended-support end, e.g. IBM) and status ('obsolete' = no longer serviced, e.g. Apple)
+            rel = [dict(cycle=r["cycle"], release_date=pdate(r["release_date"]), eoas=pdate(r["end_support_full"]), eol=pdate(r["eol"]),
+                        eoes=pdate(r.get("end_extended")) or max((d for d in esu if d), default=None),
+                        is_eol=True if r.get("status") == "obsolete" else None, maintained=None, latest=None, lts=None, end_sale=pdate(r["end_sale"])) for r in recs]
             p = dict(id=f"v:{vendor}:{prod}", source=vendor, name=prod, label=prod, category=recs[0]["category"] or "vendor-feed",
-                     vendor=norm_vendor(vendor), cpes=[], releases=rel, kev=[], url=recs[0]["url"])
+                     vendor=norm_vendor(vendor), cpes=[], releases=rel, kev=[], url=recs[0]["url"],
+                     origin=recs[0].get("source", ""), sku_count=sum(r.get("sku_count", 1) for r in recs))      # provenance, shown by the app
             names = [prod, *(a for r in recs for a in r["label_alias"])]
             names += [f"{vendor} {prod}", prod.removeprefix("Microsoft ")]                    # "VMware ESXi", "Office 2016" == "Microsoft Office 2016"
             if vendor == "microsoft": names.append("Microsoft " + prod.removeprefix("Microsoft "))

@@ -1,7 +1,7 @@
 """Streamlit explorer: see HOW the CMDB matching works, step by step, on real public inventory data.
 Run:  .venv/bin/streamlit run app.py      (needs snapshot/ from fetch_snapshot.py, raw/inventory.csv from fetch_inventory.py)
 """
-import csv, json
+import collections, csv, json
 from datetime import date
 import pandas as pd
 import streamlit as st
@@ -10,9 +10,22 @@ import cmdb_enrich as ce          # the matching engine (cascade, cycle match, l
 st.set_page_config(page_title="CMDB matching explorer", layout="wide")
 today = date.today()
 
-@st.cache_resource                # reference data loaded once per server
+@st.cache_resource(show_spinner="Loading the reference catalogue (about 30 s the first time)...")        # reference data loaded once per server
 def load_ref():
     return ce.Ref(ce.Path("snapshot"))
+@st.cache_data
+def vendor_records(mtimes):       # every vendor-feed record (Microsoft, Juniper, IBM, Apple, NVIDIA, eol.network ...); mtimes = cache key
+    return [r for f in sorted(ce.Path("snapshot").glob("vendor_lifecycle*.json")) for r in json.load(open(f))]
+VFILES = tuple(f.stat().st_mtime for f in sorted(ce.Path("snapshot").glob("vendor_lifecycle*.json")))
+@st.cache_data
+def hardware_examples(mtimes, per_vendor=12):   # a few real model/SKU strings per hardware vendor feed, to try in the explorer
+    out, seen = [], collections.Counter()
+    for r in vendor_records(mtimes):
+        if r.get("category") != "hardware": continue
+        key = r["vendor"]
+        if seen[key] >= per_vendor or not r["label_alias"]: continue
+        seen[key] += 1; out.append((r["vendor"], r["label_alias"][0], r["product"]))
+    return sorted(out)
 @st.cache_data(show_spinner="Matching the inventory (~1 s per 300 rows, cached)...")
 def enrich_csv(file, n=None):     # enrich a CSV (optionally a random sample of n rows), cached per input
     raw = pd.read_csv(file, keep_default_na=False, dtype=str)
@@ -39,7 +52,7 @@ else: df = enrich_csv(str(INVENTORY), int(st.sidebar.number_input("Sample size (
 if "source" not in df: df["source"] = "upload"
 st.sidebar.caption(f"Analysing {len(df):,} rows")
 
-tab1, tab_cov, tab_rev, tab2, tab3 = st.tabs(["🔎 Match explorer", "🧭 Source coverage", "✅ Review queue", "📊 Inventory results", "📚 Reference catalogue"])
+tab1, tab_hw, tab_cov, tab_rev, tab2, tab3 = st.tabs(["🔎 Match explorer", "🧰 Hardware lookup", "🧭 Source coverage", "✅ Review queue", "📊 Inventory results", "📚 Reference catalogue"])
 
 # =============================== TAB 1: type a component, watch the cascade ===============================
 with tab1:
@@ -48,16 +61,24 @@ with tab1:
     if "source" not in ex: ex["source"] = "inventory"
     def fill():
         r = ex.loc[st.session_state.ex_i]
-        st.session_state.update(v=r["vendor"], p=r["product"], ver=r["version"], pk=r["fw_or_pkg"])
-    st.selectbox("Load a real example (winget / Homebrew / Ubuntu)", ex.index, key="ex_i", index=None, on_change=fill,
+        st.session_state.update(v=r["vendor"], p=r["product"], ver=r["version"], pk=r["fw_or_pkg"], ct="software")
+    hw_ex = hardware_examples(VFILES)
+    def fill_hw():
+        vnd, sku, _ = hw_ex[st.session_state.hw_i]
+        st.session_state.update(v=vnd, p=sku, ver="", pk="", ct="hardware")
+    e1, e2 = st.columns(2)
+    e1.selectbox("Load a real software example (winget / Homebrew / Ubuntu)", ex.index, key="ex_i", index=None, on_change=fill,
                  format_func=lambda i: f'{ex.source[i]} | {ex.vendor[i]} | {ex["product"][i]} | {ex.version[i]}')
+    e2.selectbox("…or a hardware model / SKU from the vendor catalogues", range(len(hw_ex)), key="hw_i", index=None, on_change=fill_hw,
+                 format_func=lambda i: f"{hw_ex[i][0]} | {hw_ex[i][1]}  ({hw_ex[i][2][:50]})")
     with st.form("q"):            # Enter in any field runs the match
-        c = st.columns(4)
+        c = st.columns([2, 3, 2, 2, 1])
         vendor = c[0].text_input("Vendor", key="v"); product = c[1].text_input("Product", key="p")
         version = c[2].text_input("Version", key="ver"); pkg = c[3].text_input("Package string (optional)", key="pk")
+        ctype = c[4].selectbox("Type", ["software", "hardware"], key="ct")
         st.form_submit_button("Match", type="primary")
     if product:
-        row = dict(vendor=vendor, product=product, version=version, fw_or_pkg=pkg, ci_type="software")
+        row = dict(vendor=vendor, product=product, version=version, fw_or_pkg=pkg, ci_type=ctype)
         tr = {}; ce.match_product(ref, row, tr); res = ce.enrich(ref, [row], today)[0]
 
         if tr["alias"]: st.success(f"0 · Alias table: a human decision applies → `{tr['alias']}` ('-' = confirmed not a catalogue product). The steps below were skipped.")
@@ -84,7 +105,9 @@ with tab1:
         p = None                       # lifecycle product (set below when matched)
         st.markdown("#### 4 · Decision")
         if not res["matched_product"]:
-            st.error("UNMATCHED — in-house or unknown product (or a gap in the reference data)")
+            st.error("UNMATCHED — in-house or unknown product (or a gap in the reference data)" if ctype == "software" else
+                     "NO SOURCE — this hardware model is in none of the vendor catalogues. Not collected yet: Dell/HP/Lenovo servers and laptops, Apple (dates), "
+                     "Alcatel-Lucent, Sun/Oracle. Current products with no announced end of life are usually absent too.")
         else:
             d = st.columns(4)
             d[0].metric("Matched product", res["matched_product"]); d[1].metric("Source", res["matched_source"])
@@ -92,6 +115,11 @@ with tab1:
             st.write("Review flag:", res["review"] or "✅ none (auto-accepted)", "| data-quality flags:", res["dq_flags"] or "—")
 
             p = next((q for q in ref.prods.values() if q["label"] == res["matched_product"] and q["source"] == res["matched_source"]), None)
+            org, n_sku = p.get("origin", ""), p.get("sku_count", 1)
+            st.caption(f"Source record: `{org or p['source']}`" + (f" · one record for {n_sku:,} SKUs with identical dates (all listed as aliases)" if n_sku > 1 else "")
+                       + (f" · [vendor page / publication]({p['url']})" if str(p.get("url", "")).startswith("http") else ""))
+            if org.startswith("eol.network"): st.caption("Data from eol.network, derived from vendor publications and not authoritative: verify dates with the vendor before acting.")
+            if res["cycle_match"] == "single-cycle" and n_sku > 1: st.caption("Grouped record: the dates apply to every SKU of the group; the matched SKU is one of its aliases.")
             st.markdown("#### 5 · Version → release cycle")
             st.write(f"`{version or '(empty)'}` → cycle **{res['matched_cycle'] or '?'}**, match type `{res['cycle_match']}` "
                      "(longest dotted prefix: 3.8.10 → 3.8 → 3; epoch `1:` stripped)")
@@ -125,6 +153,35 @@ with tab1:
                 if app: st.dataframe(pd.DataFrame(app).sort_values(["kev", "cvss"], ascending=False).head(25), hide_index=True, width="stretch")
     else:
         st.info("Type a component above (e.g. vendor `MSFT`, product `Windows Server 2016 Standard`, version `10.0.14393`) or load a real example.")
+
+# =============================== TAB: batch hardware lookup ===============================
+with tab_hw:
+    st.markdown("Paste hardware models or SKUs, **one per line**, as `vendor, model` (the vendor is optional). Every line is matched against all vendor catalogues "
+                "(IBM, Apple, NVIDIA, Juniper, and Cisco / Dell / Aruba / NetApp / NVIDIA from eol.network). You can also upload a CSV with a `ci_type` column in the sidebar.")
+    sample = ("Cisco, WS-C3850-48P-L\nCisco, WS-C2960X-48FPD-L\nCisco, ISR4331/K9\nCisco, ASA5525-X\nCisco, Catalyst 9300-48P\nIBM, Power S922\nIBM, 1747HC2\n"
+              "Apple, MacBook Pro (15-inch, 2019)\nNVIDIA, Jetson TX1\nJuniper, EX4300-48T\nDell, PowerEdge R640\nHPE, ProLiant DL380 Gen10")
+    with st.form("hwq"):
+        txt = st.text_area("Models / SKUs", sample, height=240)
+        st.form_submit_button("Look up", type="primary")
+    lines = [ln.strip() for ln in txt.splitlines() if ln.strip()][:500]
+    if lines:
+        parsed = [(a.strip(), b.strip()) if "," in ln else ("", ln) for ln in lines for a, _, b in [ln.partition(",")]]
+        res_hw = ce.enrich(ref, [dict(vendor=v, product=m, version="", fw_or_pkg="", ci_type="hardware") for v, m in parsed], today)
+        plook = {(q["label"], q["source"]): q for q in ref.prods.values()}
+        out = []
+        for (v, m), o in zip(parsed, res_hw):
+            q = plook.get((o["matched_product"], o["matched_source"])) or {}
+            out.append({"vendor (input)": v, "model (input)": m, "matched record": o["matched_product"], "source": q.get("origin") or o["matched_source"],
+                        "method": o["match_method"], "confidence": o["match_confidence"], "end of sale": str(o["end_sale"] or ""), "end of support": str(o["support_end"] or ""),
+                        "end of life": str(o["eol_date"] or ""), "extended until": str(o["extended_end"] or ""), "status": o["lifecycle_status"], "SKUs in record": q.get("sku_count"),
+                        "review": o["review"], "vendor page": q.get("url", "")})
+        hw = pd.DataFrame(out); got = hw["matched record"] != ""; dated = got & (hw["end of life"] != "")
+        k = st.columns(4); k[0].metric("Lines", len(hw)); k[1].metric("Matched", f"{got.mean():.0%}"); k[2].metric("With an end-of-life date", int(dated.sum()))
+        k[3].metric("Low confidence / review", int((got & (hw["review"] != "")).sum()))
+        st.dataframe(hw, hide_index=True, width="stretch", column_config={"vendor page": st.column_config.LinkColumn("vendor page", display_text="open")})
+        st.download_button("Download results (CSV)", hw.to_csv(index=False), "hardware_lookup.csv", "text/csv")
+        st.caption("`NO_SOURCE` = in no vendor catalogue. Current products with no announced end of life are usually absent. A grouped record covers many SKUs with identical dates. "
+                   "eol.network data is derived from vendor publications and is not authoritative: verify dates with the vendor before acting.")
 
 # =============================== TAB: coverage of every source, in rows ===============================
 with tab_cov:
@@ -168,15 +225,26 @@ with tab_cov:
     b.dataframe(pd.crosstab(df.source, df.matched_source.replace("", "— unmatched")), width="stretch")
 
     st.subheader("Source status")
-    vf = ce.Path("snapshot/vendor_lifecycle.json"); vc = pd.DataFrame(json.load(open(vf))).vendor.value_counts().to_dict() if vf.exists() else {}
-    st.dataframe(pd.DataFrame([
-        ("endoflife.date", "API, bulk", n_prod.get("endoflife.date", 0), "loaded"), ("Red Hat lifecycle", "API", n_prod.get("redhat", 0), "loaded"),
-        ("Microsoft", "HTML scrape", vc.get("microsoft", 0), "loaded"), ("Juniper", "HTML scrape", vc.get("juniper", 0), "loaded"),
-        ("VMware", "public KB tables", vc.get("vmware", 0), "partial: login-only matrix → manual CSV"),
-        ("Cisco EoX v5", "API (OAuth)", vc.get("cisco", 0), "not loaded: set CISCO_CLIENT_ID / CISCO_CLIENT_SECRET" if not vc.get("cisco") else "loaded"),
-        ("NetApp", "manual CSV", vc.get("netapp", 0), "not loaded: no public source → manual/*.csv"),
-        ("NVD", "bulk mirror", n_nvd, "loaded"), ("CISA KEV + EPSS", "bulk", sum(1 for p in ref.prods.values() if p["kev"]), "loaded (products linked)")],
-        columns=["source", "collected by", "records / products", "status"]), hide_index=True, width="stretch")
+    vr = pd.DataFrame(vendor_records(VFILES)); vr["sku_count"] = pd.to_numeric(vr.get("sku_count"), errors="coerce").fillna(1).astype(int)
+    def feed(vendor, origin=""):                          # records / SKUs / hardware SKUs of one vendor feed, told apart by where they came from
+        s = vr[(vr.vendor == vendor) & vr.source.str.startswith(origin)]
+        return len(s), int(s.sku_count.sum()), int(s[s.category == "hardware"].sku_count.sum())
+    rows = [("endoflife.date", "API, bulk", n_prod.get("endoflife.date", 0), "loaded"), ("Red Hat lifecycle", "API", n_prod.get("redhat", 0), "loaded"),
+            ("Microsoft", "HTML scrape", feed("microsoft")[0], "loaded"), ("Juniper", "HTML scrape", feed("juniper")[0], "loaded"),
+            ("VMware", "public KB tables", feed("vmware")[0], "partial: login-only matrix → manual CSV"),
+            ("IBM hardware", "official bulk CSV", feed("ibm")[0], "loaded"),
+            ("Apple", "public service page", feed("apple")[0], "loaded, status only (vintage / obsolete), no dates"),
+            ("NVIDIA Jetson", "public lifecycle page", feed("nvidia", "developer.nvidia.com")[0], "loaded, month precision")]
+    for v in ("cisco", "dell", "aruba", "netapp", "nvidia"):
+        n, k, h = feed(v, "eol.network")
+        if n: rows.append((f"eol.network · {v}", "API (key), 5 free vendor slots", n, f"loaded: {k:,} SKUs, {h:,} hardware" + (" (software only)" if not h else "")))
+    nc = feed("cisco", "cisco EoX")[0]
+    rows += [("Cisco EoX v5 (official)", "API (OAuth)", nc, "loaded" if nc else "not loaded: needs CISCO_CLIENT_ID / CISCO_CLIENT_SECRET"),
+             ("NetApp manual CSV", "manual CSV", feed("netapp", "manual")[0], "not loaded" if not feed("netapp", "manual")[0] else "loaded"),
+             ("NVD", "bulk mirror", n_nvd, "loaded"), ("CISA KEV + EPSS", "bulk", sum(1 for p in ref.prods.values() if p["kev"]), "loaded (products linked)")]
+    st.dataframe(pd.DataFrame(rows, columns=["source", "collected by", "records / products", "status"]), hide_index=True, width="stretch")
+    st.caption("Not collected (no free public source or blocked): Dell / HP / Lenovo servers and laptops, Alcatel-Lucent, Sun / Oracle hardware, NVIDIA networking PDFs. "
+               "eol.network data is derived from vendor publications and is not authoritative.")
 
     st.subheader("What is not covered: most frequent unmatched vendors")
     um = df[~mt & ~nvd]
@@ -260,9 +328,14 @@ with tab2:
 # =============================== TAB 3: search the reference catalogue ===============================
 with tab3:
     s = st.text_input("Search the reference catalogue (name, label, alias or vendor)")
-    cat = pd.DataFrame([dict(product=p["label"], source=p["source"], category=p["category"], vendor=p["vendor"],
-                             cycles=len(p["releases"]), kev_cves=len(p["kev"])) for p in ref.prods.values()])
+    cat = pd.DataFrame([dict(id=pid, product=p["label"], source=p["source"], origin=p.get("origin", ""), category=p["category"], vendor=p["vendor"],
+                             skus=p.get("sku_count", 1), cycles=len(p["releases"]), kev_cves=len(p["kev"]), page=p.get("url", "")) for pid, p in ref.prods.items()])
+    f1, f2 = st.columns(2)
+    src_f = f1.multiselect("Source", sorted(cat.source.unique())); cat_f = f2.multiselect("Category", sorted(cat.category.unique()))
     if s:
-        n = ce.norm(s); hit = {p for k, ids in ref.index.items() if n in k for p in ids}
-        cat = cat[cat["product"].isin({ref.prods[i]["label"] for i in hit}) | cat.vendor.str.contains(s, case=False)]
-    st.dataframe(cat, hide_index=True, width="stretch")
+        n = ce.norm(s); hit = {p for k, ids in ref.index.items() if n in k for p in ids}       # matches names, labels and SKU aliases
+        cat = cat[cat["id"].isin(hit) | cat.vendor.str.contains(s, case=False)]
+    if src_f: cat = cat[cat.source.isin(src_f)]
+    if cat_f: cat = cat[cat.category.isin(cat_f)]
+    st.caption(f"{len(cat):,} of {len(ref.prods):,} products, {int(cat.skus.sum()):,} SKUs. Grouped records (eol.network) list all their SKUs as aliases, so a SKU search finds its group.")
+    st.dataframe(cat.drop(columns="id"), hide_index=True, width="stretch", column_config={"page": st.column_config.LinkColumn("page", display_text="open")})
