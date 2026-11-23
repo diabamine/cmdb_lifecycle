@@ -1,0 +1,7 @@
+id,product_id,source,vendor,product,aliases,category,version,release_date,end_sale,end_support,eol,end_extended,is_eol,latest,url,origin
+v:vmware:ESXi@7.x,v:vmware:ESXi,vmware,vmware,ESXi,vmware ESXi,virtualization,7.x,2020-04-02,,2025-10-02,2025-10-02,,,,https://knowledge.broadcom.com/external/article/415405,knowledge.broadcom.com/415405
+v:vmware:ESXi@8.x,v:vmware:ESXi,vmware,vmware,ESXi,vmware ESXi,virtualization,8.x,2022-10-11,,2027-10-11,2027-10-11,,,,https://knowledge.broadcom.com/external/article/459135,knowledge.broadcom.com/459135
+v:vmware:vCenter@7.x,v:vmware:vCenter,vmware,vmware,vCenter,vmware vCenter,virtualization,7.x,2020-04-02,,2025-10-02,2025-10-02,,,,https://knowledge.broadcom.com/external/article/415405,knowledge.broadcom.com/415405
+v:vmware:vCenter@8.x,v:vmware:vCenter,vmware,vmware,vCenter,vmware vCenter,virtualization,8.x,2022-10-11,,2027-10-11,2027-10-11,,,,https://knowledge.broadcom.com/external/article/459135,knowledge.broadcom.com/459135
+v:vmware:vSAN@7.x,v:vmware:vSAN,vmware,vmware,vSAN,vmware vSAN,virtualization,7.x,2020-04-02,,2025-10-02,2025-10-02,,,,https://knowledge.broadcom.com/external/article/415405,knowledge.broadcom.com/415405
+v:vmware:vSAN@8.x,v:vmware:vSAN,vmware,vmware,vSAN,vmware vSAN,virtualization,8.x,2022-10-11,,2027-10-11,2027-10-11,,,,https://knowledge.broadcom.com/external/article/459135,knowledge.broadcom.com/459135
