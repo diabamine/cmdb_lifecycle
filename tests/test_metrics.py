@@ -54,3 +54,18 @@ def test_run_log_and_freshness(tmp_path):
     manifest.write_text(json.dumps({"created_utc": "2026-11-13T18:32:09+00:00", "files": {"f.json": {"url": "u"}}}))
     assert source_freshness(manifest)[0]["file"] == "f.json"
     assert source_freshness(tmp_path / "missing.json") == []
+
+
+def test_lifecycle_metrics_counts_version_and_eol():
+    from cmdb.metrics import lifecycle_metrics
+    results = [
+        {"matched_product": "Python", "matched_cycle": "3.8", "eol_date": "2024-10-07", "lifecycle_status": "EOL", "cycle_match": "exact"},
+        {"matched_product": "Python", "matched_cycle": "", "eol_date": "", "lifecycle_status": "VERSION_UNKNOWN", "cycle_match": "no-version"},
+        {"matched_product": "", "matched_cycle": "", "eol_date": "", "lifecycle_status": "UNMATCHED", "cycle_match": ""},
+    ]
+    got = lifecycle_metrics(results)
+    assert got["matched_rows"] == 2
+    assert got["version_identified_rate"] == 50.0
+    assert got["eol_date_rate"] == 50.0
+    assert got["past_eol_rows"] == 1
+    assert got["by_cycle_match"] == {"exact": 1, "no-version": 1}

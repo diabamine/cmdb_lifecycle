@@ -23,12 +23,20 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | 1. Ingest (API + scraping) | `cmdb/ingest/<source>.py`, `python -m cmdb.ingest [--fetch] [--only ...]` | raw json in `snapshot/`, standardized `data/standard/<source>.csv` |
 | 2. Master catalog | `cmdb/catalog.py`, `python -m cmdb.catalog` | `data/master_catalog.csv` (one row per product release cycle) |
 | 3. Matching | `cmdb/matching/` (alias, exact on normalized names, fuzzy, cycle, lifecycle), `python -m cmdb.matching --cmdb in.csv --out out.csv` | matched rows; `cmdb/exposure.py` optionally adds KEV / EPSS / NVD columns |
-| 4. UI | `streamlit_app.py`: search catalog, match text or CSV, metrics, compare | |
+| 4. UI | `streamlit_app.py`: one CMDB file is matched against the master catalog (default) and any custom catalogs; tabs Matches, Metrics, Compare catalogs, Explore all read the same results | |
 | 5. Metrics | `cmdb/metrics.py`: catalog coverage per source, matching rates | |
 | 6. Compare | `cmdb/compare.py`: match the same rows against several catalogs (your own component catalog CSV, single sources) | |
 
 Column contracts for every step live in `cmdb/schema.py`. `tools/` holds test-data helpers (`make_synthetic_cmdb.py`,
 `fetch_inventory.py`), the NVD index builder, and `score.py` (accuracy against the synthetic answer key). Tests: `pytest -q`.
+
+## Using the app
+1. Upload a CMDB CSV (`product`, `version`; optional `vendor`, `fw_or_pkg`, `ci_type`) in the sidebar. Without an upload the sample `cmdb_extract.csv` is used.
+2. It is matched against the master catalog automatically. Optionally upload one or more custom catalogs (`vendor`, `product`, `version`, plus `eol`, `release_date`, `aliases` ...) to see how they compare.
+3. **Matches**: one table per catalog with the matched product, `match_method` and `match_confidence` (why it matched), `cycle_match` and `matched_cycle` (how the version was mapped), and the lifecycle fields (release, support end, EOL date, days to EOL, status). Metrics on top, filters, row-by-row explanation and the review queue below.
+4. **Metrics**: matched / auto-accepted / review / unmatched rates, share of matched rows with a version identified and an EOL date found, per catalog, plus catalog coverage.
+5. **Explore**: type a vendor, product and/or version. The catalog side lists every product and release cycle that fits (a partial version such as `3` shows all 3.x cycles, a version inside the name such as `SQL Server 2019` is detected), with EOL dates and `version_fit` explaining each cycle. The same description filters the rows of your file, with metrics for the filtered rows.
+6. **Compare catalogs**: coverage per catalog, agreement counts, side-by-side results and items whose EOL date differs between catalogs.
 
 ## Master catalog contents
 Last refreshed 2026-11-24 (`snapshot/manifest.json` has the fetch time): 21,349 release cycles, 10,221 products.

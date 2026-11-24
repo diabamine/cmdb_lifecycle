@@ -118,6 +118,21 @@ def matching_metrics(results, truth=None):
     return metrics
 
 
+def lifecycle_metrics(results):
+    """How much lifecycle information the matched rows got: version identified, EOL date retrieved, already past EOL."""
+    matched = [r for r in results if r.get("matched_product")]
+    with_cycle = [r for r in matched if r.get("matched_cycle")]
+    with_eol = [r for r in matched if r.get("eol_date")]
+    past_eol = [r for r in matched if r.get("lifecycle_status") in ("EOL", "EXTENDED_SUPPORT_ONLY")]
+    return {
+        "matched_rows": len(matched),
+        "version_identified_rate": _pct(len(with_cycle), len(matched)),
+        "eol_date_rate": _pct(len(with_eol), len(matched)),
+        "past_eol_rows": len(past_eol),
+        "by_cycle_match": _counts(matched, "cycle_match"),
+    }
+
+
 def append_run_log(path, metrics, label):
     """One JSON line per run so the UI can plot coverage / match rate over time."""
     entry = {
