@@ -1,25 +1,25 @@
 {
- "created_utc": "2026-11-13T18:32:09+00:00",
+ "created_utc": "2026-11-24T08:15:06+00:00",
  "files": {
   "endoflife_full.json": {
    "url": "https://endoflife.date/api/v1/products/full",
-   "bytes": 3043322,
-   "sha256": "67247417b71a575def9e1ae6bc8c81e11cbe23b52da7e9f0ce82765ab6f30838"
+   "bytes": 3072333,
+   "sha256": "703b5dbb4f45462f11641e0f1230e3e3fd6618f5332b5428038af961adadd11c"
   },
   "redhat_lifecycle.json": {
    "url": "https://access.redhat.com/product-life-cycles/api/v1/products",
-   "bytes": 2058902,
-   "sha256": "4ac7ad6c2fc1ee1df4d152a6bcc6909965eb98f3892a24942cbd594771ee4567"
+   "bytes": 2102679,
+   "sha256": "a782bb7d7b322dd8fd9b422aacf10d91b80f90dc96e2c07984bbbaa5aa63ad2b"
   },
   "cisa_kev.json": {
    "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
-   "bytes": 1850831,
-   "sha256": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea"
+   "bytes": 1874664,
+   "sha256": "ac8f0c4e73ec9212dd00afbb9bed2b43abc9cdb3c8719fc2c2606f008171f70a"
   },
   "epss_scores.csv.gz": {
    "url": "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz",
-   "bytes": 2845761,
-   "sha256": "7bf2ccdde4c325bf58893dd213b273fe2b65b251c6425960514b3ef9224748ff"
+   "bytes": 2880698,
+   "sha256": "bba0ae3392eedbb7a8658c9eac34d5c8b6a8ae3e84bb7c7b10769a82bd18545d"
   },
   "nvd/": {
    "url": "https://github.com/fkie-cad/nvd-json-data-feeds/releases/latest/download"

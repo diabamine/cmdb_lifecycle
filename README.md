@@ -6,10 +6,15 @@ vulnerabilities. Everything runs **offline** against a snapshot that is fetched 
 ## Quick start
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m cmdb.ingest        # offline: committed raw files in snapshot/ -> data/standard/*.csv
+.venv/bin/streamlit run streamlit_app.py     # the committed data/master_catalog.csv is ready to use
+
+# rebuild without network (committed raw files in snapshot/):
+.venv/bin/python -m cmdb.ingest        # snapshot/ -> data/standard/*.csv
 .venv/bin/python -m cmdb.catalog       # data/standard/*.csv -> data/master_catalog.csv
-.venv/bin/streamlit run streamlit_app.py
-./run_all.sh                           # full refresh incl. network fetch (needs internet)
+
+# refresh from the sources (needs internet; a source that fails keeps its previous data):
+.venv/bin/python -m cmdb.ingest --fetch && .venv/bin/python -m cmdb.catalog
+./run_all.sh                           # same, plus the public sample inventory and a matching run
 ```
 
 ## Pipeline
@@ -24,6 +29,26 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Column contracts for every step live in `cmdb/schema.py`. `tools/` holds test-data helpers (`make_synthetic_cmdb.py`,
 `fetch_inventory.py`), the NVD index builder, and `score.py` (accuracy against the synthetic answer key). Tests: `pytest -q`.
+
+## Master catalog contents
+Last refreshed 2026-11-24 (`snapshot/manifest.json` has the fetch time): 21,349 release cycles, 10,221 products.
+
+| Source | Cycles | Notes |
+|---|---|---|
+| endoflife.date | 9,476 | OS, languages, databases, frameworks |
+| eol.network | 5,135 | hardware; local use only, see below |
+| IBM | 2,423 | hardware, bulk CSV |
+| Red Hat | 1,580 | |
+| Microsoft | 1,606 | scraped; paid ESU dates are folded into `end_extended` |
+| Juniper | 617 | scraped |
+| Apple | 481 | status only for vintage/obsolete models |
+| NVIDIA | 25 | Jetson |
+| VMware | 6 | public KB tables only |
+| Cisco, manual | 0 | need credentials / a CSV in `manual/` |
+
+eol.network's terms forbid republishing its data: keep `data/standard/eolnetwork.csv` and
+`snapshot/vendor_lifecycle_eolnetwork.json` out of any public repository. Refreshing it only re-pulls vendors already
+pulled (no new free-tier listing slot); new vendors need `--eol-vendors`.
 
 ## Known limits
 - Cisco: the EoX v5 collector is tested only against a simulated API, never the live one. It needs a Cisco ID enabled for the Support APIs (Smart Net Total Care or Partner Support Service); a free Cisco.com account gets "HTTP 403 Developer Inactive". Run it with `CISCO_CLIENT_ID=.. CISCO_CLIENT_SECRET=.. python3 -m cmdb.ingest --fetch --only cisco`; a failed run leaves existing Cisco data untouched. Without access there is no scraper fallback yet. NetApp needs a manual CSV in `manual/`.

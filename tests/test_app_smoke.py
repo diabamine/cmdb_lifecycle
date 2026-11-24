@@ -30,7 +30,7 @@ def app(monkeypatch, tmp_path):
     fake_module(monkeypatch, "cmdb.matching.matcher", build_index=lambda catalog: {},
                 match_one=lambda query, index, trace=None: match,
                 match_rows=lambda rows, catalog, aliases=None, today=None: [{**r, **match} for r in rows],
-                search_catalog=lambda catalog, text, limit=50: CATALOG,
+                search_scored=lambda index, text, limit=20: [{**CATALOG[0], "matched_on": "python", "method": "exact", "confidence": 98, "verdict": "auto-accept"}],
                 load_aliases=lambda path: {}, save_alias=lambda *args: None)
     fake_module(monkeypatch, "cmdb.metrics", catalog_coverage=lambda catalog: [{"source": "endoflife.date", "products": 1}],
                 matching_metrics=lambda results, truth=None: {})

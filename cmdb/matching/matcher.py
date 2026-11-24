@@ -243,6 +243,59 @@ def search_catalog(catalog, text, limit=None):
     found = []
     for _, _, rows in scored:
         found.extend(rows)
-        if len(found) >= limit:
+        if limit is not None and len(found) >= limit:
             break
     return found[:limit]
+
+
+def verdict(confidence):
+    """What the matcher would do with this score for a CMDB row."""
+    if confidence >= AUTO:
+        return "auto-accept"
+    if confidence >= REVIEW:
+        return "review"
+    return "weak"
+
+
+def search_scored(index, text, limit=20):
+    """Catalog products a free-text query could mean, each with HOW it matched and a 0-100 confidence.
+
+    method: exact    = the normalised query is a product name or alias (same confidence as the matcher)
+            contains = every query word appears in a catalog name
+            fuzzy    = similar spelling (same scorer and penalties as the matcher's fuzzy step)
+    Best hit per product, best score first. Searches names and aliases only, not vendors."""
+    query = norm(text)
+    if not query:
+        return []
+    words = query.split()
+    best = {}                                 # product_id -> hit
+
+    def keep(product_id, key, method, confidence):
+        known = best.get(product_id)
+        if known and known["confidence"] >= confidence:
+            return
+        product = index.products[product_id]
+        best[product_id] = {"product_id": product_id, "product": product["name"], "vendor": product["vendor"],
+                            "source": product["source"], "category": product["category"], "matched_on": key,
+                            "method": method, "confidence": round(confidence, 1), "verdict": verdict(confidence)}
+
+    exact_ids = index.names.get(query, ())
+    for product_id in exact_ids:
+        keep(product_id, query, "exact", 98 if len(exact_ids) == 1 else 93)
+
+    # Scoring every key that contains the words, then the fuzzy neighbours, lets one product keep its best method.
+    for key in index.keys:
+        if key == query or not all(word in key for word in words):
+            continue
+        score = fuzz.token_sort_ratio(query, key) - fuzzy_penalty(query, key)
+        for product_id in index.names[key]:
+            keep(product_id, key, "contains", min(max(score, 0), 97))
+
+    for key, score, _ in process.extract(query, index.keys, scorer=fuzz.token_sort_ratio, limit=limit * 3, score_cutoff=70):
+        if digit_tokens(query) and digit_tokens(key) and digit_tokens(query) != digit_tokens(key):
+            continue                          # different model / version number
+        for product_id in index.names[key]:
+            keep(product_id, key, "fuzzy", min(score - fuzzy_penalty(query, key), 97))
+
+    hits = sorted(best.values(), key=lambda hit: (-hit["confidence"], hit["product"]))
+    return hits[:limit]

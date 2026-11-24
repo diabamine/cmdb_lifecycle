@@ -9,7 +9,7 @@ import streamlit as st
 
 from cmdb.catalog import load_catalog
 from cmdb.compare import compare_references, comparison_summary, load_component_catalog
-from cmdb.matching.matcher import build_index, load_aliases, match_one, match_rows, save_alias, search_catalog
+from cmdb.matching.matcher import build_index, load_aliases, match_one, match_rows, save_alias, search_scored
 from cmdb.metrics import catalog_coverage, matching_metrics
 
 CATALOG_PATH = Path("data/master_catalog.csv")
@@ -50,25 +50,28 @@ def run_match(rows, catalog):
     return results
 
 
-def tab_search(catalog):
-    text = st.text_input("Search by product, alias or vendor")
-    categories = st.multiselect(
-        "Select columns", 
-        [col for col in catalog[0].keys()], 
-        ["product_id","vendor", "product", "source", "category"]
-    )
-    if not text or text.strip() == "":
-        st.dataframe(pd.DataFrame(catalog)[categories].drop_duplicates("product_id"))
-    else:
-        hits = search_catalog(catalog, text, limit=50)
-        if not hits:
-            st.info("No product found.")
-            return
-        products = pd.DataFrame(hits)[categories].drop_duplicates("product_id")
-        st.dataframe(products.drop(columns="product_id"), hide_index=True)
-        chosen = st.selectbox("Show all cycles of", products["product_id"], format_func=lambda pid: products.set_index("product_id").loc[pid, "product"])
-        cycles = [row for row in catalog if row["product_id"] == chosen]
-        st.dataframe(pd.DataFrame(cycles).drop(columns=["id", "product_id", "aliases"]), hide_index=True)
+def tab_search(catalog, index):
+    text = st.text_input("Search by product or alias")
+    if not text.strip():
+        columns = st.multiselect("Columns", list(catalog[0]), ["product_id", "vendor", "product", "source", "category"])
+        products = pd.DataFrame(catalog).drop_duplicates("product_id")
+        st.dataframe(products[columns], hide_index=True)
+        st.caption(f"{len(products)} products in the catalog. Type a name to see how it matches.")
+        return
+
+    hits = search_scored(index, text)
+    if not hits:
+        st.info("No product found.")
+        return
+    st.caption("method: exact = name or alias equals the query | contains = all words found in a name | "
+               "fuzzy = similar spelling. verdict uses the matcher thresholds: auto-accept >= 90, review >= 85.")
+    table = pd.DataFrame(hits)
+    shown = ["product", "vendor", "source", "matched_on", "method", "confidence", "verdict"]
+    st.dataframe(table[shown], hide_index=True,
+                 column_config={"confidence": st.column_config.ProgressColumn("confidence", min_value=0, max_value=100, format="%d")})
+    chosen = st.selectbox("Show all cycles of", table["product_id"], format_func=lambda pid: table.set_index("product_id").loc[pid, "product"])
+    cycles = [row for row in catalog if row["product_id"] == chosen]
+    st.dataframe(pd.DataFrame(cycles).drop(columns=["id", "product_id", "aliases"]), hide_index=True)
 
 
 def show_trace(trace):
@@ -172,7 +175,7 @@ catalog = get_catalog(CATALOG_PATH)
 index = get_index(CATALOG_PATH)
 search_tab, match_tab, metrics_tab, compare_tab = st.tabs(["Search catalog", "Match", "Metrics", "Compare"])
 with search_tab:
-    tab_search(catalog)
+    tab_search(catalog, index)
 with match_tab:
     tab_match(catalog, index)
 with metrics_tab:

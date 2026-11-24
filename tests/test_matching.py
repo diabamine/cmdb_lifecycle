@@ -1,6 +1,6 @@
 from datetime import date
 
-from cmdb.matching import build_index, load_aliases, match_one, match_rows, save_alias, search_catalog
+from cmdb.matching import build_index, load_aliases, match_one, match_rows, save_alias, search_catalog, search_scored
 from cmdb.schema import MATCH_COLUMNS, STANDARD_COLUMNS
 
 TODAY = date(2026, 6, 1)
@@ -191,3 +191,21 @@ def test_search_catalog_by_name_alias_vendor():
     assert {r["product_id"] for r in search_catalog(catalog, "httpd")} == {"p:a"}
     assert {r["product_id"] for r in search_catalog(catalog, "globex")} == {"p:b"}
     assert search_catalog(catalog, "") == []
+
+
+def test_search_scored_methods_and_confidence():
+    index = build_index([cat_row("p:a", "Apache HTTP Server", "2.4", vendor="apache", aliases="httpd"),
+                         cat_row("p:b", "Postgresql", "15"), cat_row("p:c", "Postgresql 15 Contrib", "1")])
+    alias_hit = search_scored(index, "HTTPD")[0]
+    assert (alias_hit["product_id"], alias_hit["method"], alias_hit["confidence"]) == ("p:a", "exact", 98)
+    assert alias_hit["verdict"] == "auto-accept"
+
+    by_id = {hit["product_id"]: hit for hit in search_scored(index, "postgresql")}
+    assert by_id["p:b"]["method"] == "exact"
+    assert by_id["p:c"]["method"] == "contains"
+    assert by_id["p:c"]["confidence"] < by_id["p:b"]["confidence"]
+
+    typo = search_scored(index, "postgresq1l")           # one wrong character is a fuzzy hit, not exact
+    assert typo and typo[0]["method"] == "fuzzy" and typo[0]["product_id"] == "p:b"
+    assert search_scored(index, "") == []
+    assert search_scored(index, "zzzzqqqq") == []
