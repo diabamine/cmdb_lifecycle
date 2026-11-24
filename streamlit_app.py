@@ -52,17 +52,23 @@ def run_match(rows, catalog):
 
 def tab_search(catalog):
     text = st.text_input("Search by product, alias or vendor")
-    if not text:
-        return
-    hits = search_catalog(catalog, text)
-    if not hits:
-        st.info("No product found.")
-        return
-    products = pd.DataFrame(hits)[["product_id", "vendor", "product", "source", "category"]].drop_duplicates("product_id")
-    st.dataframe(products.drop(columns="product_id"), hide_index=True)
-    chosen = st.selectbox("Show all cycles of", products["product_id"], format_func=lambda pid: products.set_index("product_id").loc[pid, "product"])
-    cycles = [row for row in catalog if row["product_id"] == chosen]
-    st.dataframe(pd.DataFrame(cycles).drop(columns=["id", "product_id", "aliases"]), hide_index=True)
+    categories = st.multiselect(
+        "Select columns", 
+        [col for col in catalog[0].keys()], 
+        ["product_id","vendor", "product", "source", "category"]
+    )
+    if not text or text.strip() == "":
+        st.dataframe(pd.DataFrame(catalog)[categories].drop_duplicates("product_id"))
+    else:
+        hits = search_catalog(catalog, text, limit=50)
+        if not hits:
+            st.info("No product found.")
+            return
+        products = pd.DataFrame(hits)[categories].drop_duplicates("product_id")
+        st.dataframe(products.drop(columns="product_id"), hide_index=True)
+        chosen = st.selectbox("Show all cycles of", products["product_id"], format_func=lambda pid: products.set_index("product_id").loc[pid, "product"])
+        cycles = [row for row in catalog if row["product_id"] == chosen]
+        st.dataframe(pd.DataFrame(cycles).drop(columns=["id", "product_id", "aliases"]), hide_index=True)
 
 
 def show_trace(trace):

@@ -213,7 +213,7 @@ def match_rows(rows, catalog, aliases=None, today=None):
     return [match_one(row, index, aliases=aliases, today=today) for row in rows]
 
 
-def search_catalog(catalog, text, limit=50):
+def search_catalog(catalog, text, limit=None):
     """Catalog rows (all cycles) of products whose name, alias or vendor contains the text, best matches first."""
     words = norm(text).split()
     if not words:
