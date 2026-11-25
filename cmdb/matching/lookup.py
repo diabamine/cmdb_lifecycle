@@ -102,7 +102,9 @@ def lookup(index: CatalogIndex, vendor="", product="", version="", today=None, m
         releases = index.products[hit["product_id"]]["releases"]
         fitting = cycles_for_version(releases, version_used)
         if not fitting:
-            unfit.append({**base_row(hit), "cycle": "", "version_fit": "version not in catalog"})
+            unfit.append({**base_row(hit), "cycle": "", "version_fit": "version not in catalog", "release_date": None,
+                          "support_end": None, "eol_date": None, "extended_end": None, "latest_in_cycle": None,
+                          "lifecycle_status": "unknown", "days_to_eol": None})
             continue
         for release, how in fitting:
             row = {**base_row(hit), "cycle": release["cycle"], "version_fit": how,
