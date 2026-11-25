@@ -1,4 +1,4 @@
-"""IBM: official bulk lifecycle CSV (no login). Hardware only (~2.4k machine types); software would add ~11,800 rows.
+"""IBM: official bulk lifecycle CSV (no login). Hardware (~2.4k machine types) and software (~11.8k product versions).
 
 GA -> release_date, Withdrawn from Marketing -> end_sale, Transition to Extended/End of Support -> eol,
 Completion of Extended -> end_extended. Machine type+model and "(1747-HC2)" become aliases.
@@ -14,7 +14,7 @@ VENDOR = "ibm"
 CSV_URL = "https://www.ibm.com/support/pages/space/product-lifecycle/ibm_product_lifecycle_list.csv"
 LIFECYCLE_PAGE = "https://www.ibm.com/support/pages/product-lifecycle-list"
 SOURCE = "ibm.com/support/pages/product-lifecycle-list"
-TYPES = {"HW"}
+TYPES = {"HW", "SW"}
 REQUIRED_COLUMNS = {"Type", "IBM Product", "MTM", "General Availability"}
 
 
@@ -24,7 +24,7 @@ def fetch(raw_dir: Path) -> None:
     if not rows or not REQUIRED_COLUMNS <= set(rows[0]):
         raise CollectorError("ibm: lifecycle CSV missing or its header changed")
     records = parse_rows(rows)
-    if sum(r["category"] == "hardware" for r in records) < 1000:
+    if sum(r["category"] == "hardware" for r in records) < 1000 or sum(r["category"] == "software" for r in records) < 5000:
         raise CollectorError(f"ibm: only {len(records)} rows, expected thousands (format change?)")
     replace_vendor_records(raw_dir, VENDOR, records)
 
@@ -46,7 +46,7 @@ def parse_rows(rows: list[dict]) -> list[dict]:
         # "IBM Power System S922 Server (9009-22A)" -> "IBM Power System S922 Server" -> "Power System S922 Server"
         base = re.sub(r"\s*\([^)]*\)\s*$", "", name).strip()
         short = re.sub(r"^IBM\s+", "", base)
-        lean = re.sub(r"\s+", " ", re.sub(r"\b(?:System|Systems|Server)\b", " ", short)).strip()   # "Power S922": how a CMDB spells it
+        lean = re.sub(r"\s+", " ", re.sub(r"\b(?:System|Systems|Server)\b", " ", short)).strip() if hardware else ""   # "Power S922": how a CMDB spells it
         names = {mtm, in_title.group(1) if in_title else "", base, short, lean} - {"", name}
         cycle = (mtm or name) if hardware else (vrm or name)
         out.append(rec(VENDOR, name, cycle, SOURCE, r.get("More Info URL") or LIFECYCLE_PAGE,

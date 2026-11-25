@@ -91,9 +91,13 @@ def test_ibm_rows():
            "General Availability": "2018-02-13", "Withdrawn from Marketing": "2022-03-01",
            "Transition to Extended/Sustained, End of Support": "2025-04-30",
            "Completion of Extended, Sustained, Extension availability": "2027-04-30", "More Info URL": ""}
-    (record,) = ibm.parse_rows([row, {**row, "Type": "SW"}])
+    record, software = ibm.parse_rows([row, {**row, "Type": "SW", "IBM Product": "WebSphere Application Server", "MTM": "N/A",
+                                             "VRM": "9.0.5"}])
     assert record["eol"] == "2025-04-30" and record["end_extended"] == "2027-04-30"
     assert "Power S922" in record["label_alias"] and "9009-22A" in record["label_alias"]
+    assert (software["category"], software["cycle"], software["product"]) == ("software", "9.0.5", "WebSphere Application Server")
+    assert "WebSphere Application" not in software["label_alias"]      # the hardware-style "lean" name is not for software
+    assert ibm.parse_rows([{**row, "Type": "OTHER"}]) == []
 
 
 def test_apple_page_skips_phones_and_maps_status():
@@ -268,3 +272,4 @@ def test_trellix_hardware_dates_and_rows(tmp_path):
     (tmp_path / trellix.FEED_FILE).write_text(json.dumps(records))
     rows = trellix.standardize(tmp_path)
     assert rows[0]["vendor"] == "trellix" and rows[0]["source"] == "trellix" and "ATD 3100" in rows[0]["aliases"].split("|")
+
