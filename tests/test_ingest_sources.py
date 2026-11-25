@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from cmdb.ingest import apple, citrix, trellix, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
+from cmdb.ingest import apple, citrix, sunoracle, trellix, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
 from cmdb.ingest.__main__ import main
 from cmdb.ingest.common import CollectorError, iso, month_end, rec, vendor_rows
 from cmdb.schema import STANDARD_COLUMNS
@@ -273,3 +273,17 @@ def test_trellix_hardware_dates_and_rows(tmp_path):
     rows = trellix.standardize(tmp_path)
     assert rows[0]["vendor"] == "trellix" and rows[0]["source"] == "trellix" and "ATD 3100" in rows[0]["aliases"].split("|")
 
+
+PARKPLACE = """<table><tr><th>Model</th><th>EOSL Date</th></tr>
+<tr><td>Ultra10 Workstation</td><td>12 / 30 / 2005</td><td></td></tr>
+<tr><td>Sun Netra T2000 \x96 4 Core</td><td>05 / 31 / 2016</td><td></td></tr>
+<tr><td>Enterprise 5000</td><td>Not Announced</td><td></td></tr></table>"""
+
+
+def test_sunoracle_rows(tmp_path):
+    records = sunoracle.parse_page(PARKPLACE)
+    assert [(r["product"], r["eol"]) for r in records] == [("Ultra10 Workstation", "2005-12-30"), ("Sun Netra T2000 - 4 Core", "2016-05-31")]
+    (tmp_path / sunoracle.FEED_FILE).write_text(json.dumps(records))
+    rows = sunoracle.standardize(tmp_path)
+    assert rows[0]["vendor"] == "oracle" and rows[0]["source"] == "parkplace" and rows[0]["eol"] == "2005-12-30"
+    assert "Sun Microsystems Ultra10 Workstation" in rows[0]["aliases"].split("|")

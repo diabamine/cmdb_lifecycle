@@ -9,7 +9,7 @@ from rapidfuzz import fuzz
 CORP = {"inc", "corp", "corporation", "ltd", "llc", "bv", "nv", "foundation", "the", "software", "systems",
         "company", "co", "gmbh", "sa", "by", "group", "global", "development", "project", "organization",
         "international", "networks", "technologies", "technology", "incorporated", "limited", "plc", "ag"}
-VENDOR_SYNONYMS = {"msft": "microsoft", "rh": "redhat", "orcl": "oracle", "pgdg": "postgresql", "asf": "apache",
+VENDOR_SYNONYMS = {"msft": "microsoft", "rh": "redhat", "orcl": "oracle", "sun": "oracle", "sun microsystems": "oracle", "pgdg": "postgresql", "asf": "apache",
                    "hpe": "hewlett packard enterprise", "hp": "hewlett packard"}
 # Packagers / placeholders that carry no vendor signal ("Ubuntu Developers" says nothing about the product).
 GENERIC_VENDORS = {"ubuntudevelopers", "debianmaintainers", "internal", "acmeit", "unknown", "na"}

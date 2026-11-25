@@ -1,0 +1,3620 @@
+[
+{
+"vendor": "oracle",
+"product": "StorageTek LTO Tape Drive",
+"label_alias": [
+"Sun Microsystems StorageTek LTO Tape Drive"
+],
+"cycle": "StorageTek LTO Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2025-11-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T7-1",
+"label_alias": [
+"Sun Microsystems SPARC T7-1"
+],
+"cycle": "SPARC T7-1",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2025-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Private Cloud Appliance X6",
+"label_alias": [
+"Sun Microsystems Oracle Private Cloud Appliance X6"
+],
+"cycle": "Oracle Private Cloud Appliance X6",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2025-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X7-8",
+"label_alias": [
+"Sun Microsystems Oracle Server X7-8"
+],
+"cycle": "Oracle Server X7-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2025-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Private Cloud Appliance X5",
+"label_alias": [
+"Sun Microsystems Oracle Private Cloud Appliance X5"
+],
+"cycle": "Oracle Private Cloud Appliance X5",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2025-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T7-2",
+"label_alias": [
+"Sun Microsystems SPARC T7-2"
+],
+"cycle": "SPARC T7-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T7-4",
+"label_alias": [
+"Sun Microsystems SPARC T7-4"
+],
+"cycle": "SPARC T7-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC M7-8",
+"label_alias": [
+"Sun Microsystems SPARC M7-8"
+],
+"cycle": "SPARC M7-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC M7-16",
+"label_alias": [
+"Sun Microsystems SPARC M7-16"
+],
+"cycle": "SPARC M7-16",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Virtual Storage Manager System 7 (VSM7)",
+"label_alias": [
+"Sun Microsystems Virtual Storage Manager System 7 (VSM7)"
+],
+"cycle": "Virtual Storage Manager System 7 (VSM7)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "ZDLRA X7",
+"label_alias": [
+"Sun Microsystems ZDLRA X7"
+],
+"cycle": "ZDLRA X7",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X5-4",
+"label_alias": [
+"Sun Microsystems Oracle Server X5-4"
+],
+"cycle": "Oracle Server X5-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage ZS5-2, Racked",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage ZS5-2, Racked"
+],
+"cycle": "Oracle ZFS Storage ZS5-2, Racked",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage ZS5-4, Racked",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage ZS5-4, Racked"
+],
+"cycle": "Oracle ZFS Storage ZS5-4, Racked",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2024-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "LTO6",
+"label_alias": [
+"Sun Microsystems LTO6"
+],
+"cycle": "LTO6",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X5-8",
+"label_alias": [
+"Sun Microsystems Oracle Server X5-8"
+],
+"cycle": "Oracle Server X5-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X6-2",
+"label_alias": [
+"Sun Microsystems Oracle Server X6-2"
+],
+"cycle": "Oracle Server X6-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X6-2L",
+"label_alias": [
+"Sun Microsystems Oracle Server X6-2L"
+],
+"cycle": "Oracle Server X6-2L",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek SL3000",
+"label_alias": [
+"Sun Microsystems StorageTek SL3000"
+],
+"cycle": "StorageTek SL3000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle FS1-2",
+"label_alias": [
+"Sun Microsystems Oracle FS1-2"
+],
+"cycle": "Oracle FS1-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek Virtual Library Extension with effective 200TB Capacity (X4-4 Server)",
+"label_alias": [
+"Sun Microsystems StorageTek Virtual Library Extension with effective 200TB Capacity (X4-4 Server)"
+],
+"cycle": "StorageTek Virtual Library Extension with effective 200TB Capacity (X4-4 Server)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "ZDLRA X6",
+"label_alias": [
+"Sun Microsystems ZDLRA X6"
+],
+"cycle": "ZDLRA X6",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra Modular System",
+"label_alias": [
+"Sun Microsystems Netra Modular System"
+],
+"cycle": "Netra Modular System",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2023-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SuperCluster M7-8",
+"label_alias": [
+"Sun Microsystems SuperCluster M7-8"
+],
+"cycle": "SuperCluster M7-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Backup Appliance ZS5-4",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Backup Appliance ZS5-4"
+],
+"cycle": "Oracle ZFS Backup Appliance ZS5-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Backup Appliance ZS4-4",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Backup Appliance ZS4-4"
+],
+"cycle": "Oracle ZFS Backup Appliance ZS4-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Backup Appliance ZS5-2",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Backup Appliance ZS5-2"
+],
+"cycle": "Oracle ZFS Backup Appliance ZS5-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T5-4",
+"label_alias": [
+"Sun Microsystems SPARC T5-4"
+],
+"cycle": "SPARC T5-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T5-8",
+"label_alias": [
+"Sun Microsystems SPARC T5-8"
+],
+"cycle": "SPARC T5-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Fabric Interconnect F1-15 Director Switch",
+"label_alias": [
+"Sun Microsystems Oracle Fabric Interconnect F1-15 Director Switch"
+],
+"cycle": "Oracle Fabric Interconnect F1-15 Director Switch",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Fabric Interconnect F1-4 Director Switch",
+"label_alias": [
+"Sun Microsystems Oracle Fabric Interconnect F1-4 Director Switch"
+],
+"cycle": "Oracle Fabric Interconnect F1-4 Director Switch",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T5-2",
+"label_alias": [
+"Sun Microsystems SPARC T5-2"
+],
+"cycle": "SPARC T5-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage Appliance",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage Appliance"
+],
+"cycle": "Oracle ZFS Storage Appliance",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage ZS3-2",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage ZS3-2"
+],
+"cycle": "Oracle ZFS Storage ZS3-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage ZS4-4, Racked",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage ZS4-4, Racked"
+],
+"cycle": "Oracle ZFS Storage ZS4-4, Racked",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra SPARC T4-1",
+"label_alias": [
+"Sun Microsystems Netra SPARC T4-1"
+],
+"cycle": "Netra SPARC T4-1",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X5-2",
+"label_alias": [
+"Sun Microsystems Oracle Server X5-2"
+],
+"cycle": "Oracle Server X5-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Server X5-2L",
+"label_alias": [
+"Sun Microsystems Oracle Server X5-2L"
+],
+"cycle": "Oracle Server X5-2L",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC M6-32",
+"label_alias": [
+"Sun Microsystems SPARC M6-32"
+],
+"cycle": "SPARC M6-32",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2022-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SuperCluster M6-32",
+"label_alias": [
+"Sun Microsystems SuperCluster M6-32"
+],
+"cycle": "SuperCluster M6-32",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "LTO5",
+"label_alias": [
+"Sun Microsystems LTO5"
+],
+"cycle": "LTO5",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-11-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SuperCluster T5-8",
+"label_alias": [
+"Sun Microsystems SuperCluster T5-8"
+],
+"cycle": "SuperCluster T5-8",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Virtual Storage Manager System 6 (VSM6)",
+"label_alias": [
+"Sun Microsystems Virtual Storage Manager System 6 (VSM6)"
+],
+"cycle": "Virtual Storage Manager System 6 (VSM6)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra SPARC T4-2",
+"label_alias": [
+"Sun Microsystems Netra SPARC T4-2"
+],
+"cycle": "Netra SPARC T4-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "ZDLRA X5",
+"label_alias": [
+"Sun Microsystems ZDLRA X5"
+],
+"cycle": "ZDLRA X5",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC T4-1",
+"label_alias": [
+"Sun Microsystems SPARC T4-1"
+],
+"cycle": "SPARC T4-1",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-03-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra SPARC T5-1B",
+"label_alias": [
+"Sun Microsystems Netra SPARC T5-1B"
+],
+"cycle": "Netra SPARC T5-1B",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2021-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T10000C Tape Drive",
+"label_alias": [
+"Sun Microsystems T10000C Tape Drive"
+],
+"cycle": "T10000C Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-11-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Virtual Compute Appliance X4-2",
+"label_alias": [
+"Sun Microsystems Oracle Virtual Compute Appliance X4-2"
+],
+"cycle": "Oracle Virtual Compute Appliance X4-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "ZDLRA X4",
+"label_alias": [
+"Sun Microsystems ZDLRA X4"
+],
+"cycle": "ZDLRA X4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "LTO4 rackmount",
+"label_alias": [
+"Sun Microsystems LTO4 rackmount"
+],
+"cycle": "LTO4 rackmount",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle ZFS Storage ZS3-4",
+"label_alias": [
+"Sun Microsystems Oracle ZFS Storage ZS3-4"
+],
+"cycle": "Oracle ZFS Storage ZS3-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra SPARC T4-1B",
+"label_alias": [
+"Sun Microsystems Netra SPARC T4-1B"
+],
+"cycle": "Netra SPARC T4-1B",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2020-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Oracle Virtual Compute Appliance X3-2",
+"label_alias": [
+"Sun Microsystems Oracle Virtual Compute Appliance X3-2"
+],
+"cycle": "Oracle Virtual Compute Appliance X3-2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC M5-32",
+"label_alias": [
+"Sun Microsystems SPARC M5-32"
+],
+"cycle": "SPARC M5-32",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek 2530 M2",
+"label_alias": [
+"Sun Microsystems StorageTek 2530 M2"
+],
+"cycle": "StorageTek 2530 M2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek 2540 M2",
+"label_alias": [
+"Sun Microsystems StorageTek 2540 M2"
+],
+"cycle": "StorageTek 2540 M2",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 2500-M2 Array",
+"label_alias": [
+"Sun Microsystems Storage 2500-M2 Array"
+],
+"cycle": "Sun Storage 2500-M2 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Cp3060 Cto Chassis",
+"label_alias": [
+"Sun Microsystems Cp3060 Cto Chassis"
+],
+"cycle": "Cp3060 Cto Chassis",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-08-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek VSM 5",
+"label_alias": [
+"Sun Microsystems StorageTek VSM 5"
+],
+"cycle": "StorageTek VSM 5",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-03-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek VSM 5e",
+"label_alias": [
+"Sun Microsystems StorageTek VSM 5e"
+],
+"cycle": "StorageTek VSM 5e",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-03-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun ZFS Storage 7120",
+"label_alias": [
+"Sun Microsystems ZFS Storage 7120"
+],
+"cycle": "Sun ZFS Storage 7120",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun ZFS Storage 7320",
+"label_alias": [
+"Sun Microsystems ZFS Storage 7320"
+],
+"cycle": "Sun ZFS Storage 7320",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun ZFS Backup Appliance HC",
+"label_alias": [
+"Sun Microsystems ZFS Backup Appliance HC"
+],
+"cycle": "Sun ZFS Backup Appliance HC",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun ZFS Backup Appliance HP",
+"label_alias": [
+"Sun Microsystems ZFS Backup Appliance HP"
+],
+"cycle": "Sun ZFS Backup Appliance HP",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T9840D - FICON",
+"label_alias": [
+"Sun Microsystems T9840D - FICON"
+],
+"cycle": "T9840D - FICON",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek Virtual Library Extension with 330 TB effective capacity",
+"label_alias": [
+"Sun Microsystems StorageTek Virtual Library Extension with 330 TB effective capacity"
+],
+"cycle": "StorageTek Virtual Library Extension with 330 TB effective capacity",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T9840D Open Tape Drive",
+"label_alias": [
+"Sun Microsystems T9840D Open Tape Drive"
+],
+"cycle": "T9840D Open Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "LTO4",
+"label_alias": [
+"Sun Microsystems LTO4"
+],
+"cycle": "LTO4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2019-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Enterprise 5000",
+"label_alias": [
+"Sun Microsystems Enterprise 5000"
+],
+"cycle": "Enterprise 5000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-12-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T1000",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T1000"
+],
+"cycle": "Sun SPARC Enterprise T1000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T2000",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T2000"
+],
+"cycle": "Sun SPARC Enterprise T2000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPARC SuperCluster T4-4",
+"label_alias": [
+"Sun Microsystems SPARC SuperCluster T4-4"
+],
+"cycle": "SPARC SuperCluster T4-4",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T5120",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T5120"
+],
+"cycle": "Sun SPARC Enterprise T5120",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T5440",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T5440"
+],
+"cycle": "Sun SPARC Enterprise T5440",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sunfire V125",
+"label_alias": [
+"Sun Microsystems Sunfire V125"
+],
+"cycle": "Sunfire V125",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek SL500",
+"label_alias": [
+"Sun Microsystems StorageTek SL500"
+],
+"cycle": "StorageTek SL500",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek SL24",
+"label_alias": [
+"Sun Microsystems StorageTek SL24"
+],
+"cycle": "StorageTek SL24",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek SL48",
+"label_alias": [
+"Sun Microsystems StorageTek SL48"
+],
+"cycle": "StorageTek SL48",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-05-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T10000B",
+"label_alias": [
+"Sun Microsystems T10000B"
+],
+"cycle": "T10000B",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "cp3060 Cto Chassis",
+"label_alias": [
+"Sun Microsystems cp3060 Cto Chassis"
+],
+"cycle": "cp3060 Cto Chassis",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2018-02-28",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T5240",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T5240"
+],
+"cycle": "Sun SPARC Enterprise T5240",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge A5100",
+"label_alias": [
+"Sun Microsystems StorEdge A5100"
+],
+"cycle": "Sun StorEdge A5100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage F5100",
+"label_alias": [
+"Sun Microsystems Storage F5100"
+],
+"cycle": "Sun Storage F5100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra SPARC T3-1",
+"label_alias": [
+"Sun Microsystems Netra SPARC T3-1"
+],
+"cycle": "Netra SPARC T3-1",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-12-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC Enterprise T5220",
+"label_alias": [
+"Sun Microsystems SPARC Enterprise T5220"
+],
+"cycle": "Sun SPARC Enterprise T5220",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 6180",
+"label_alias": [
+"Sun Microsystems Storage 6180"
+],
+"cycle": "Sun Storage 6180",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 6580",
+"label_alias": [
+"Sun Microsystems Storage 6580"
+],
+"cycle": "Sun Storage 6580",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 6780",
+"label_alias": [
+"Sun Microsystems Storage 6780"
+],
+"cycle": "Sun Storage 6780",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek Virtual Library Extension 220TB (x4270 M2 Server with 2TB drives)",
+"label_alias": [
+"Sun Microsystems StorageTek Virtual Library Extension 220TB (x4270 M2 Server with 2TB drives)"
+],
+"cycle": "StorageTek Virtual Library Extension 220TB (x4270 M2 Server with 2TB drives)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC T3-1 Server - 8 Core",
+"label_alias": [
+"Sun Microsystems SPARC T3-1 Server - 8 Core"
+],
+"cycle": "Sun SPARC T3-1 Server - 8 Core",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARC T3-2 Server - 16 Core",
+"label_alias": [
+"Sun Microsystems SPARC T3-2 Server - 16 Core"
+],
+"cycle": "Sun SPARC T3-2 Server - 16 Core",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-08-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "E3500 Cto Chassis",
+"label_alias": [
+"Sun Microsystems E3500 Cto Chassis"
+],
+"cycle": "E3500 Cto Chassis",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Blade X6250",
+"label_alias": [
+"Sun Microsystems Blade X6250"
+],
+"cycle": "Blade X6250",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storagetek A3500 Array",
+"label_alias": [
+"Sun Microsystems Storagetek A3500 Array"
+],
+"cycle": "Storagetek A3500 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sunfire X2100",
+"label_alias": [
+"Sun Microsystems Sunfire X2100"
+],
+"cycle": "Sunfire X2100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-03-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 5200 22 Slot Disk Array",
+"label_alias": [
+"Sun Microsystems Storedge 5200 22 Slot Disk Array"
+],
+"cycle": "Storedge 5200 22 Slot Disk Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-03-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire T5240 - 1 x 8C CPU",
+"label_alias": [
+"Sun Microsystems SunFire T5240 - 1 x 8C CPU"
+],
+"cycle": "SunFire T5240 - 1 x 8C CPU",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2017-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ray 3 Plus Client (Non-Taa Compliant)",
+"label_alias": [
+"Sun Microsystems Ray 3 Plus Client (Non-Taa Compliant)"
+],
+"cycle": "Ray 3 Plus Client (Non-Taa Compliant)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire T5140",
+"label_alias": [
+"Sun Microsystems SunFire T5140"
+],
+"cycle": "SunFire T5140",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 6920 Disk Array",
+"label_alias": [
+"Sun Microsystems Storedge 6920 Disk Array"
+],
+"cycle": "Storedge 6920 Disk Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-08-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ultra 20 Workstation",
+"label_alias": [
+"Sun Microsystems Ultra 20 Workstation"
+],
+"cycle": "Ultra 20 Workstation",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-07-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 6120 Disk Array",
+"label_alias": [
+"Sun Microsystems Storedge 6120 Disk Array"
+],
+"cycle": "Storedge 6120 Disk Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-07-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek 2510 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 2510 Array"
+],
+"cycle": "Sun StorageTek 2510 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorageTek 2530 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 2530 Array"
+],
+"cycle": "StorageTek 2530 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek 2540 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 2540 Array"
+],
+"cycle": "Sun StorageTek 2540 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ultra 30 Cto Chassis",
+"label_alias": [
+"Sun Microsystems Ultra 30 Cto Chassis"
+],
+"cycle": "Ultra 30 Cto Chassis",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ultra25 Workstation",
+"label_alias": [
+"Sun Microsystems Ultra25 Workstation"
+],
+"cycle": "Ultra25 Workstation",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ultra1/140 143Mhz/256Kb",
+"label_alias": [
+"Sun Microsystems Ultra1/140 143Mhz/256Kb"
+],
+"cycle": "Ultra1/140 143Mhz/256Kb",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Ultra10 Workstation",
+"label_alias": [
+"Sun Microsystems Ultra10 Workstation"
+],
+"cycle": "Ultra10 Workstation",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Blade 2000",
+"label_alias": [
+"Sun Microsystems Blade 2000"
+],
+"cycle": "Blade 2000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Blade 1000 Base",
+"label_alias": [
+"Sun Microsystems Blade 1000 Base"
+],
+"cycle": "Blade 1000 Base",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra T2000 - 4 Core",
+"label_alias": [
+"Sun Microsystems Netra T2000 - 4 Core"
+],
+"cycle": "Sun Netra T2000 - 4 Core",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2016-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 7310 Unified Storage",
+"label_alias": [
+"Sun Microsystems Storage 7310 Unified Storage"
+],
+"cycle": "Sun Storage 7310 Unified Storage",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage J4400 24 slot SAS/SATA Array 4U",
+"label_alias": [
+"Sun Microsystems Storage J4400 24 slot SAS/SATA Array 4U"
+],
+"cycle": "Sun Storage J4400 24 slot SAS/SATA Array 4U",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek 6140 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 6140 Array"
+],
+"cycle": "Sun StorageTek 6140 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External LTO3 400/800Gb Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External LTO3 400/800Gb Tape Drive"
+],
+"cycle": "Sun StorEdge External LTO3 400/800Gb Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T10000 Open Tape Drive",
+"label_alias": [
+"Sun Microsystems T10000 Open Tape Drive"
+],
+"cycle": "T10000 Open Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-07-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "T10000A - All Tape Drives",
+"label_alias": [
+"Sun Microsystems T10000A - All Tape Drives"
+],
+"cycle": "T10000A - All Tape Drives",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-07-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPArc Enterprise M4000",
+"label_alias": [
+"Sun Microsystems SPArc Enterprise M4000"
+],
+"cycle": "SPArc Enterprise M4000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SPArc Enterprise M3000",
+"label_alias": [
+"Sun Microsystems SPArc Enterprise M3000"
+],
+"cycle": "SPArc Enterprise M3000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-04-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire T1000",
+"label_alias": [
+"Sun Microsystems SunFire T1000"
+],
+"cycle": "SunFire T1000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-01-31",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek 6540 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 6540 Array"
+],
+"cycle": "Sun StorageTek 6540 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire T2000 - 4 Core",
+"label_alias": [
+"Sun Microsystems SunFire T2000 - 4 Core"
+],
+"cycle": "SunFire T2000 - 4 Core",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire T2000 - 8 Core",
+"label_alias": [
+"Sun Microsystems SunFire T2000 - 8 Core"
+],
+"cycle": "SunFire T2000 - 8 Core",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2015-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra 210",
+"label_alias": [
+"Sun Microsystems Netra 210"
+],
+"cycle": "Sun Netra 210",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage 7410 Unified Storage",
+"label_alias": [
+"Sun Microsystems Storage 7410 Unified Storage"
+],
+"cycle": "Sun Storage 7410 Unified Storage",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storage J4200 12 slot SAS/SATA Array 2U",
+"label_alias": [
+"Sun Microsystems Storage J4200 12 slot SAS/SATA Array 2U"
+],
+"cycle": "Sun Storage J4200 12 slot SAS/SATA Array 2U",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3120 JBOD",
+"label_alias": [
+"Sun Microsystems StorEdge 3120 JBOD"
+],
+"cycle": "Sun StorEdge 3120 JBOD",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3320 AC RAID",
+"label_alias": [
+"Sun Microsystems StorEdge 3320 AC RAID"
+],
+"cycle": "Sun StorEdge 3320 AC RAID",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3320 JBOD",
+"label_alias": [
+"Sun Microsystems StorEdge 3320 JBOD"
+],
+"cycle": "Sun StorEdge 3320 JBOD",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3510 AC Raid",
+"label_alias": [
+"Sun Microsystems StorEdge 3510 AC Raid"
+],
+"cycle": "Sun StorEdge 3510 AC Raid",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorEdge 3510 JBOD",
+"label_alias": [
+"Sun Microsystems StorEdge 3510 JBOD"
+],
+"cycle": "StorEdge 3510 JBOD",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Storedge D240 Media Tray",
+"label_alias": [
+"Sun Microsystems Storedge D240 Media Tray"
+],
+"cycle": "Sun Storedge D240 Media Tray",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra 240",
+"label_alias": [
+"Sun Microsystems Netra 240"
+],
+"cycle": "Sun Netra 240",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-05-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra 440",
+"label_alias": [
+"Sun Microsystems Netra 440"
+],
+"cycle": "Sun Netra 440",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-05-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire E4900 Base Server",
+"label_alias": [
+"Sun Microsystems SunFire E4900 Base Server"
+],
+"cycle": "SunFire E4900 Base Server",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek 5320 Array",
+"label_alias": [
+"Sun Microsystems StorageTek 5320 Array"
+],
+"cycle": "Sun StorageTek 5320 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-03-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire E2900 Base Server",
+"label_alias": [
+"Sun Microsystems SunFire E2900 Base Server"
+],
+"cycle": "SunFire E2900 Base Server",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-03-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge C2 Tape Autoloader 1 Drive 8 or 16 Slot",
+"label_alias": [
+"Sun Microsystems StorEdge C2 Tape Autoloader 1 Drive 8 or 16 Slot"
+],
+"cycle": "Sun StorEdge C2 Tape Autoloader 1 Drive 8 or 16 Slot",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorEdge C4 Tape Library",
+"label_alias": [
+"Sun Microsystems StorEdge C4 Tape Library"
+],
+"cycle": "StorEdge C4 Tape Library",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2014-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External SDLT320 160/320Gb Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External SDLT320 160/320Gb Tape Drive"
+],
+"cycle": "Sun StorEdge External SDLT320 160/320Gb Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2013-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 9990V 1152-Slot Rohs:Yl System",
+"label_alias": [
+"Sun Microsystems Storedge 9990V 1152-Slot Rohs:Yl System"
+],
+"cycle": "Storedge 9990V 1152-Slot Rohs:Yl System",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2013-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V1280 12-Way",
+"label_alias": [
+"Sun Microsystems SunFire V1280 12-Way"
+],
+"cycle": "SunFire V1280 12-Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2013-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V1280 4-Way",
+"label_alias": [
+"Sun Microsystems SunFire V1280 4-Way"
+],
+"cycle": "SunFire V1280 4-Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2013-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V1280 8-Way",
+"label_alias": [
+"Sun Microsystems SunFire V1280 8-Way"
+],
+"cycle": "SunFire V1280 8-Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2013-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra T1100 Base (Telco)",
+"label_alias": [
+"Sun Microsystems Netra T1100 Base (Telco)"
+],
+"cycle": "Netra T1100 Base (Telco)",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-12-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V20z",
+"label_alias": [
+"Sun Microsystems SunFire V20z"
+],
+"cycle": "SunFire V20z",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-11-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V210 1 Way",
+"label_alias": [
+"Sun Microsystems SunFire V210 1 Way"
+],
+"cycle": "SunFire V210 1 Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-11-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External LTO2 400/400Gb Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External LTO2 400/400Gb Tape Drive"
+],
+"cycle": "Sun StorEdge External LTO2 400/400Gb Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-10-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Netra Ft 1800 Base",
+"label_alias": [
+"Sun Microsystems Netra Ft 1800 Base"
+],
+"cycle": "Netra Ft 1800 Base",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-09-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorageTek L180 Tape Library - 2D",
+"label_alias": [
+"Sun Microsystems StorageTek L180 Tape Library - 2D"
+],
+"cycle": "Sun StorageTek L180 Tape Library - 2D",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-07-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3511 JBOD 12 bay SATA",
+"label_alias": [
+"Sun Microsystems StorEdge 3511 JBOD 12 bay SATA"
+],
+"cycle": "Sun StorEdge 3511 JBOD 12 bay SATA",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 6130 Array",
+"label_alias": [
+"Sun Microsystems StorEdge 6130 Array"
+],
+"cycle": "Sun StorEdge 6130 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge S1 Array",
+"label_alias": [
+"Sun Microsystems StorEdge S1 Array"
+],
+"cycle": "Sun StorEdge S1 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge T3 Dual Storage Array",
+"label_alias": [
+"Sun Microsystems StorEdge T3 Dual Storage Array"
+],
+"cycle": "Sun StorEdge T3 Dual Storage Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2012-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 9980 Disk Array",
+"label_alias": [
+"Sun Microsystems Storedge 9980 Disk Array"
+],
+"cycle": "Storedge 9980 Disk Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-12-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra T1120",
+"label_alias": [
+"Sun Microsystems Netra T1120"
+],
+"cycle": "Sun Netra T1120",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra T1125",
+"label_alias": [
+"Sun Microsystems Netra T1125"
+],
+"cycle": "Sun Netra T1125",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge A1000 Array",
+"label_alias": [
+"Sun Microsystems StorEdge A1000 Array"
+],
+"cycle": "Sun StorEdge A1000 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge D2 Array",
+"label_alias": [
+"Sun Microsystems StorEdge D2 Array"
+],
+"cycle": "Sun StorEdge D2 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Storedge 3300 Disk Array",
+"label_alias": [
+"Sun Microsystems Storedge 3300 Disk Array"
+],
+"cycle": "Storedge 3300 Disk Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra 120",
+"label_alias": [
+"Sun Microsystems Netra 120"
+],
+"cycle": "Sun Netra 120",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "StorEdge 3310 AC Raid",
+"label_alias": [
+"Sun Microsystems StorEdge 3310 AC Raid"
+],
+"cycle": "StorEdge 3310 AC Raid",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3310 JBOD",
+"label_alias": [
+"Sun Microsystems StorEdge 3310 JBOD"
+],
+"cycle": "Sun StorEdge 3310 JBOD",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunBlade 150",
+"label_alias": [
+"Sun Microsystems SunBlade 150"
+],
+"cycle": "SunBlade 150",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunBlade 1500",
+"label_alias": [
+"Sun Microsystems SunBlade 1500"
+],
+"cycle": "SunBlade 1500",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunBlade 2500",
+"label_alias": [
+"Sun Microsystems SunBlade 2500"
+],
+"cycle": "SunBlade 2500",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V100",
+"label_alias": [
+"Sun Microsystems SunFire V100"
+],
+"cycle": "SunFire V100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire V120",
+"label_alias": [
+"Sun Microsystems SunFire V120"
+],
+"cycle": "SunFire V120",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire 4800 Base Server",
+"label_alias": [
+"Sun Microsystems SunFire 4800 Base Server"
+],
+"cycle": "SunFire 4800 Base Server",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-05-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire 6800 Base Server",
+"label_alias": [
+"Sun Microsystems SunFire 6800 Base Server"
+],
+"cycle": "SunFire 6800 Base Server",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-05-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire 280R 1-Way",
+"label_alias": [
+"Sun Microsystems SunFire 280R 1-Way"
+],
+"cycle": "SunFire 280R 1-Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-04-04",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L8 8 Slot Tape Autoloader",
+"label_alias": [
+"Sun Microsystems StorEdge L8 8 Slot Tape Autoloader"
+],
+"cycle": "Sun StorEdge L8 8 Slot Tape Autoloader",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunFire 280R 2-Way",
+"label_alias": [
+"Sun Microsystems SunFire 280R 2-Way"
+],
+"cycle": "SunFire 280R 2-Way",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2011-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 220R",
+"label_alias": [
+"Sun Microsystems Enterprise 220R"
+],
+"cycle": "Sun Enterprise 220R",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 250",
+"label_alias": [
+"Sun Microsystems Enterprise 250"
+],
+"cycle": "Sun Enterprise 250",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 420R",
+"label_alias": [
+"Sun Microsystems Enterprise 420R"
+],
+"cycle": "Sun Enterprise 420R",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 450",
+"label_alias": [
+"Sun Microsystems Enterprise 450"
+],
+"cycle": "Sun Enterprise 450",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 4500 Base System",
+"label_alias": [
+"Sun Microsystems Enterprise 4500 Base System"
+],
+"cycle": "Sun Enterprise 4500 Base System",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Enterprise 6500 Base System",
+"label_alias": [
+"Sun Microsystems Enterprise 6500 Base System"
+],
+"cycle": "Sun Enterprise 6500 Base System",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun NETRA D130 Array",
+"label_alias": [
+"Sun Microsystems NETRA D130 Array"
+],
+"cycle": "Sun NETRA D130 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra 20",
+"label_alias": [
+"Sun Microsystems Netra 20"
+],
+"cycle": "Sun Netra 20",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-04-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External DDS4 Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External DDS4 Tape Drive"
+],
+"cycle": "Sun StorEdge External DDS4 Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-03-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge 3910 System",
+"label_alias": [
+"Sun Microsystems StorEdge 3910 System"
+],
+"cycle": "Sun StorEdge 3910 System",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2010-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARCstation 20",
+"label_alias": [
+"Sun Microsystems SPARCstation 20"
+],
+"cycle": "Sun SPARCstation 20",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2009-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunBlade 1000",
+"label_alias": [
+"Sun Microsystems SunBlade 1000"
+],
+"cycle": "SunBlade 1000",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2009-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge D1000 Array",
+"label_alias": [
+"Sun Microsystems StorEdge D1000 Array"
+],
+"cycle": "Sun StorEdge D1000 Array",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2009-09-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L7 7 Slot Tape Autoloader",
+"label_alias": [
+"Sun Microsystems StorEdge L7 7 Slot Tape Autoloader"
+],
+"cycle": "Sun StorEdge L7 7 Slot Tape Autoloader",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2009-01-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L25 Tape Library",
+"label_alias": [
+"Sun Microsystems StorEdge L25 Tape Library"
+],
+"cycle": "Sun StorEdge L25 Tape Library",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-08-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L9 9 Slot Tape Autoloader",
+"label_alias": [
+"Sun Microsystems StorEdge L9 9 Slot Tape Autoloader"
+],
+"cycle": "Sun StorEdge L9 9 Slot Tape Autoloader",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-06-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra T1 100",
+"label_alias": [
+"Sun Microsystems Netra T1 100"
+],
+"cycle": "Sun Netra T1 100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra T1 200AC",
+"label_alias": [
+"Sun Microsystems Netra T1 200AC"
+],
+"cycle": "Sun Netra T1 200AC",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External DDS3 Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External DDS3 Tape Drive"
+],
+"cycle": "Sun StorEdge External DDS3 Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "SunBlade 100",
+"label_alias": [
+"Sun Microsystems SunBlade 100"
+],
+"cycle": "SunBlade 100",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2008-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L1000 1 to 4 DLT drive 30 slot Tape Library",
+"label_alias": [
+"Sun Microsystems StorEdge L1000 1 to 4 DLT drive 30 slot Tape Library"
+],
+"cycle": "Sun StorEdge L1000 1 to 4 DLT drive 30 slot Tape Library",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2007-12-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge External DLT7000 35/70Gb Tape Drive",
+"label_alias": [
+"Sun Microsystems StorEdge External DLT7000 35/70Gb Tape Drive"
+],
+"cycle": "Sun StorEdge External DLT7000 35/70Gb Tape Drive",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2007-11-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun Netra X1",
+"label_alias": [
+"Sun Microsystems Netra X1"
+],
+"cycle": "Sun Netra X1",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2007-10-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun StorEdge L280 Tape Autoloader",
+"label_alias": [
+"Sun Microsystems StorEdge L280 Tape Autoloader"
+],
+"cycle": "Sun StorEdge L280 Tape Autoloader",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2006-02-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sunfire V480 Base Cto Chassis",
+"label_alias": [
+"Sun Microsystems Sunfire V480 Base Cto Chassis"
+],
+"cycle": "Sunfire V480 Base Cto Chassis",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2005-12-30",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+},
+{
+"vendor": "oracle",
+"product": "Sun SPARCstation 10",
+"label_alias": [
+"Sun Microsystems SPARCstation 10"
+],
+"cycle": "Sun SPARCstation 10",
+"release_date": "",
+"end_sale": "",
+"end_support_full": "",
+"eol": "2000-11-01",
+"end_security_support": "",
+"end_extended": "",
+"status": "",
+"category": "hardware",
+"source": "parkplace",
+"url": "https://www.parkplacetechnologies.com/eosl/sun-oracle/"
+}
+]
