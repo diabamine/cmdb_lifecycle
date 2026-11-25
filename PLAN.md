@@ -24,7 +24,7 @@ tests/                         pytest, small fixtures only (never the 300 MB NVD
 
 ## Public interfaces (the contract between agents)
 ```python
-# step 1  cmdb/ingest/<source>.py  (sources: endoflife, redhat, microsoft, juniper, vmware, ibm, apple, nvidia, cisco, eolnetwork, manual)
+# step 1  cmdb/ingest/<source>.py  (sources: endoflife, redhat, microsoft, juniper, vmware, ibm, apple, nvidia, cisco, eolnetwork, eosldate, manual)
 def fetch(raw_dir: Path) -> None
 def standardize(raw_dir: Path) -> list[dict]        # keys == STANDARD_COLUMNS
 

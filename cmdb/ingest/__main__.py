@@ -3,6 +3,8 @@
   python -m cmdb.ingest                      # offline: standardize the committed raw files
   python -m cmdb.ingest --fetch              # fetch every source first (network), then standardize
   python -m cmdb.ingest --fetch --only microsoft ibm
+  python -m cmdb.ingest --fetch --only eosldate        # eosl.date: Apple Brocade Cisco Dell Juniper HPE IBM NetApp
+  python -m cmdb.ingest --fetch --only eoslai          # EOSL.ai: ~3,800 families, ~15 min; --eosl-vendors Cisco Dell for a subset
   python -m cmdb.ingest --fetch --only eolnetwork --eol-vendors cisco aruba   # new vendors use free-tier listing slots
 
 A source that fails to fetch keeps its previous raw data; the run continues and exits 1 at the end.
@@ -12,13 +14,14 @@ import csv
 import sys
 from pathlib import Path
 
-from cmdb.ingest import (apple, cisco, eolnetwork, endoflife, ibm, juniper, manual, microsoft, nvidia, redhat,
+from cmdb.ingest import (apple, cisco, eolnetwork, eosldate, eoslai, endoflife, ibm, juniper, manual, microsoft, nvidia, redhat,
                          security, vmware)
 from cmdb.schema import STANDARD_COLUMNS
 
 SOURCES = {
     "endoflife": endoflife, "redhat": redhat, "microsoft": microsoft, "juniper": juniper, "vmware": vmware,
-    "ibm": ibm, "apple": apple, "nvidia": nvidia, "cisco": cisco, "eolnetwork": eolnetwork, "manual": manual,
+    "ibm": ibm, "apple": apple, "nvidia": nvidia, "cisco": cisco, "eolnetwork": eolnetwork, "eosldate": eosldate,
+    "eoslai": eoslai, "manual": manual,
 }
 # Fetched with --fetch (when no --only is given) but never standardized.
 FETCH_ONLY = {"security": security}
@@ -41,6 +44,7 @@ def main() -> int:
     parser.add_argument("--raw", default="snapshot", type=Path, help="raw data directory (default: snapshot)")
     parser.add_argument("--out", default="data/standard", type=Path, help="output directory (default: data/standard)")
     parser.add_argument("--eol-vendors", nargs="+", metavar="SLUG", help="eol.network vendors to list with --fetch")
+    parser.add_argument("--eosl-vendors", nargs="+", metavar="NAME", help="EOSL.ai vendors to fetch (default: all)")
     parser.add_argument("--nvd", action="store_true", help="with --fetch: also download the full NVD CVE base (~120 MB)")
     args = parser.parse_args()
 
@@ -54,6 +58,8 @@ def main() -> int:
             try:
                 if name == "eolnetwork":
                     module.fetch(args.raw, args.eol_vendors)
+                elif name == "eoslai":
+                    module.fetch(args.raw, args.eosl_vendors)
                 else:
                     module.fetch(args.raw)
                 if name == "security" and args.nvd:

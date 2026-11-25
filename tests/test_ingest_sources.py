@@ -2,9 +2,11 @@
 import csv
 import json
 
-from cmdb.ingest import apple, eolnetwork, endoflife, ibm, manual, microsoft, redhat
+import pytest
+
+from cmdb.ingest import apple, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
 from cmdb.ingest.__main__ import main
-from cmdb.ingest.common import iso, month_end, rec, vendor_rows
+from cmdb.ingest.common import CollectorError, iso, month_end, rec, vendor_rows
 from cmdb.schema import STANDARD_COLUMNS
 
 ENDOFLIFE = {"result": [{
@@ -149,3 +151,55 @@ def test_cli_offline_writes_one_csv_per_source(tmp_path, monkeypatch):
         assert reader.fieldnames == STANDARD_COLUMNS
         assert len(list(reader)) == 2
     assert (out / "microsoft.csv").exists() and not (out / "security.csv").exists()
+
+
+def test_eosldate_parses_tables_by_header():
+    page = """
+    <table><tr><th>Product</th><th>Model Number</th><th>Product Line</th><th>Release Date</th><th>End of Support</th></tr>
+      <tr><td>Catalyst 2960X</td><td>WS-C2960X-24TS</td><td>Cisco Catalyst</td><td><time>Oct. 01, 2019</time></td><td>2027-10-31</td></tr>
+      <tr><td>(adsbygoogle = window.adsbygoogle || []).push({});</td></tr></table>
+    <table><tr><th>Product</th><th>Version Number</th><th>Release Date</th><th>End of Support</th></tr>
+      <tr><td></td><td>Sonoma (macOS 14)</td><td>Sep. 26, 2023</td><td>Not Announced</td></tr></table>
+    <table><tr><th>Product</th><th>Model Number</th><th>Product Line</th><th>End of Sale Date</th><th>End of Service Date</th></tr>
+      <tr><td>AF20Q</td><td>AF20Q</td><td>All Flash Array</td><td>Jul. 31, 2023</td><td>Jul. 31, 2028 Support continues for 1 year</td></tr></table>
+    <table><tr><th>Name</th><th>Colour</th></tr><tr><td>x</td><td>y</td></tr></table>"""
+    cisco_row, mac_row, hpe_row = eosldate.parse_page(page, "cisco", "cisco")
+    assert (cisco_row["eol"], cisco_row["release_date"], cisco_row["label_alias"]) == ("2027-10-31", "2019-10-01", ["WS-C2960X-24TS", "Cisco Catalyst"])
+    assert (mac_row["product"], mac_row["eol"], mac_row["category"]) == ("Sonoma (macOS 14)", "", "software")
+    assert (hpe_row["end_sale"], hpe_row["eol"]) == ("2023-07-31", "2028-07-31")
+    assert vendor_rows([cisco_row], source=eosldate.SOURCE)[0]["source"] == "eosl.date"
+
+
+def test_eoslai_groups_to_records():
+    family = {
+        "vendor": "Cisco", "line": "Nexus", "series": "9300 Series", "url": "https://eosl.ai/system/x/",
+        "skuGroups": [
+            {"label": "Switch hardware", "endOfSale": "2017-03", "endOfServiceLife": "2022-02", "eoslComputed": False,
+             "exactDates": {"endOfServiceLife": {"date": "2022-02-28"}}, "sourceUrl": "https://cisco.example/eol",
+             "skus": [{"partNumber": "N9K-M6PQ", "replacement": "N9K-M6PQ-E"}, {"partNumber": "N9K-M4PC"}]},
+            {"label": "Policy-derived", "endOfServiceLife": "2030-06", "eoslComputed": True, "skus": []},
+            {"label": "Current", "skus": [{"partNumber": "C9300-24T"}]},
+            {"label": "Ended, no date", "vendorStatesSupportEnded": True, "skus": []},
+        ]}
+    exact, computed, current, ended = eoslai.to_records(family)
+    assert exact["product"] == "Nexus 9300 Series" and exact["vendor"] == "cisco"
+    assert (exact["eol"], exact["end_sale"], exact["source"]) == ("2022-02-28", "2017-03-31", "eosl.ai")
+    assert exact["label_alias"] == ["9300 Series", "N9K-M6PQ", "N9K-M4PC"] and exact["url"] == "https://cisco.example/eol"
+    assert (computed["eol"], computed["source"]) == ("2030-06-30", "eosl.ai:computed")
+    assert (current["eol"], current["status"]) == ("", "") and ended["status"] == "obsolete"
+    rows = vendor_rows([computed, ended], source=eoslai.SOURCE)
+    assert rows[0]["origin"] == "eosl.ai:computed" and rows[1]["is_eol"] == "true"
+    assert eoslai.group_day({"endOfSale": "2017-13"}, "endOfSale") == ""
+
+
+def test_eoslai_failed_vendor_keeps_previous_records(tmp_path, monkeypatch):
+    raw = tmp_path / "snapshot"
+    raw.mkdir()
+    old = [dict(vendor="cisco", product="Old", label_alias=[], cycle="Old", source="eosl.ai", eol="2020-01-01")]
+    (raw / eoslai.FEED_FILE).write_text(json.dumps(old))
+    index = json.dumps({"families": [{"vendor": "Cisco", "slug": "a", "detail": "https://x/a.json"}]}).encode()
+    monkeypatch.setattr(eoslai, "get", lambda url, **kw: index if url.endswith("families.json") else (_ for _ in ()).throw(CollectorError("boom")))
+    monkeypatch.setattr(eoslai, "PAUSE_SECONDS", 0)
+    with pytest.raises(CollectorError):
+        eoslai.fetch(raw)
+    assert json.loads((raw / eoslai.FEED_FILE).read_text()) == old
