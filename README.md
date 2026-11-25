@@ -55,6 +55,7 @@ Last refreshed 2026-11-24 (`snapshot/manifest.json` has the fetch time): 21,349 
 | Juniper | 617 | scraped |
 | eosl.date | 11,111 | hardware (Apple, Brocade, Cisco, Dell EMC, HPE, IBM, Juniper, NetApp); scraped, one page per vendor |
 | Apple | 481 | status only for vintage/obsolete models |
+| Citrix | 36 | citrix.com product lifecycle matrix (CVAD, XenApp, NetScaler, FAS, App Layering, Secure Access, uberAgent) |
 | NVIDIA | 25 | Jetson |
 | VMware | 6 | public KB tables only |
 | Cisco, manual | 0 | need credentials / a CSV in `manual/` |

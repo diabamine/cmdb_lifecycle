@@ -4,6 +4,7 @@
   python -m cmdb.ingest --fetch              # fetch every source first (network), then standardize
   python -m cmdb.ingest --fetch --only microsoft ibm
   python -m cmdb.ingest --fetch --only eosldate        # eosl.date: Apple Brocade Cisco Dell Juniper HPE IBM NetApp
+  python -m cmdb.ingest --fetch --only citrix          # citrix.com product lifecycle matrix
   python -m cmdb.ingest --fetch --only eoslai          # EOSL.ai: ~3,800 families, ~15 min; --eosl-vendors Cisco Dell for a subset
   python -m cmdb.ingest --fetch --only eolnetwork --eol-vendors cisco aruba   # new vendors use free-tier listing slots
 
@@ -14,14 +15,14 @@ import csv
 import sys
 from pathlib import Path
 
-from cmdb.ingest import (apple, cisco, eolnetwork, eosldate, eoslai, endoflife, ibm, juniper, manual, microsoft, nvidia, redhat,
+from cmdb.ingest import (apple, cisco, citrix, eolnetwork, eosldate, eoslai, endoflife, ibm, juniper, manual, microsoft, nvidia, redhat,
                          security, vmware)
 from cmdb.schema import STANDARD_COLUMNS
 
 SOURCES = {
     "endoflife": endoflife, "redhat": redhat, "microsoft": microsoft, "juniper": juniper, "vmware": vmware,
     "ibm": ibm, "apple": apple, "nvidia": nvidia, "cisco": cisco, "eolnetwork": eolnetwork, "eosldate": eosldate,
-    "eoslai": eoslai, "manual": manual,
+    "eoslai": eoslai, "citrix": citrix, "manual": manual,
 }
 # Fetched with --fetch (when no --only is given) but never standardized.
 FETCH_ONLY = {"security": security}

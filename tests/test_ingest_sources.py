@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from cmdb.ingest import apple, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
+from cmdb.ingest import apple, citrix, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
 from cmdb.ingest.__main__ import main
 from cmdb.ingest.common import CollectorError, iso, month_end, rec, vendor_rows
 from cmdb.schema import STANDARD_COLUMNS
@@ -203,3 +203,42 @@ def test_eoslai_failed_vendor_keeps_previous_records(tmp_path, monkeypatch):
     with pytest.raises(CollectorError):
         eoslai.fetch(raw)
     assert json.loads((raw / eoslai.FEED_FILE).read_text()) == old
+
+
+CITRIX_DATA_TABLE = """<main><div><div class="table"><div class="data-table"><div><div><ol>
+<li><h3>Product/Component Name</h3><ol><li>Citrix Virtual Apps and Desktops</li><li>Citrix Virtual Apps and Desktops</li></ol></li>
+<li><h3><strong>Version/Model</strong></h3><ol><li>2203 LTSR</li><li>2402 LTSR</li></ol></li>
+<li><h3>EOL</h3><ol><li>23-Mar-27</li><li>17-Aug-2029</li></ol></li>
+<li><h3>EOES</h3><ol><li>For eligible customers*</li><li>15-Aug-31</li></ol></li>
+</ol></div></div></div></div></div></main>"""
+
+CITRIX_ROWS = """<main><div><div class="table">
+<div><div><strong>Product</strong></div><div><strong>Version</strong></div><div><strong>Language</strong></div><div><strong>EOS*</strong></div><div><strong>EOL*</strong></div></div>
+<div><div>NetScaler ADC</div><div>14.1(GA: 08-Aug-23)</div><div>EN</div><div>08-Aug-29</div><div>08-Aug-30</div></div>
+<div><div>NetScaler ADC</div><div>14.1(GA: 08-Aug-23)</div><div>DE</div><div>08-Aug-29</div><div>08-Aug-30</div></div>
+<div><div>uberAgent</div><div>8.x</div><div>EN</div><div>N/A</div><div>N/A</div></div>
+</div></div></main>"""
+
+
+def test_citrix_parse_dates():
+    assert citrix.parse_date("15-Aug-22") == "2022-08-15"
+    assert citrix.parse_date("15-Sept-21") == "2021-09-15"
+    assert citrix.parse_date("13-01-2027") == "2027-01-13"
+    assert citrix.parse_date("For eligible customers*") == citrix.parse_date("N/A") == ""
+
+
+def test_citrix_column_layout():
+    first, second = citrix.parse_fragment(CITRIX_DATA_TABLE, "citrix-virtual-apps")
+    assert (first["cycle"], first["eol"], first["end_extended"]) == ("2203 LTSR", "2027-03-23", "")
+    assert (second["eol"], second["end_extended"]) == ("2029-08-17", "2031-08-15")
+
+
+def test_citrix_row_layout_one_row_per_language_and_release_date_from_cycle(tmp_path):
+    (record,) = citrix.parse_fragment(CITRIX_ROWS, "netscaler-adc")        # DE duplicate and undated row dropped
+    assert (record["cycle"], record["release_date"], record["end_sale"], record["eol"]) == (
+        "14.1", "2023-08-08", "2029-08-08", "2030-08-08")
+    (tmp_path / citrix.FEED_FILE).write_text(json.dumps([record]))
+    (row,) = citrix.standardize(tmp_path)
+    assert list(row) == STANDARD_COLUMNS and row["source"] == "citrix" and row["vendor"] == "citrix"
+    assert row["eol"] == "2030-08-08" and "Citrix NetScaler ADC" in row["aliases"].split("|")
+

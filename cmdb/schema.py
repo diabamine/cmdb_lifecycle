@@ -4,7 +4,7 @@
 STANDARD_COLUMNS = [
     "id",            # unique row id: f"{product_id}@{version}"
     "product_id",    # stable per product, e.g. "eol:python", "rh:rhel", "v:microsoft:Windows Server 2019"
-    "source",        # endoflife.date | redhat | microsoft | juniper | vmware | ibm | apple | nvidia | cisco | eol.network | eosl.date | eosl.ai | manual:<file>
+    "source",        # endoflife.date | redhat | microsoft | juniper | vmware | ibm | apple | nvidia | cisco | eol.network | eosl.date | eosl.ai | citrix | manual:<file>
     "vendor",        # as published by the source (cleaning happens in the catalog step)
     "product",       # canonical product name
     "aliases",       # alternative spellings, "|"-separated (marketing names, SKUs, purl/cpe names)
