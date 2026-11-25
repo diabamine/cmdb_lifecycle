@@ -1,58 +1,8 @@
 """Step 6: match the same inputs against several reference catalogs and show where they disagree."""
-import csv
-import re
 from collections import Counter
-from pathlib import Path
 
+from cmdb.inputs import load_component_catalog  # noqa: F401  (the reader lives in cmdb.inputs; kept importable from here)
 from cmdb.matching.normalize import norm
-from cmdb.schema import STANDARD_COLUMNS
-
-# accepted header spellings -> standard key (compared lowercase, spaces/dashes as "_")
-_HEADERS = {
-    "vendor": "vendor", "manufacturer": "vendor", "publisher": "vendor",
-    "product": "product", "name": "product", "component": "product", "product_name": "product",
-    "version": "version", "release": "version", "cycle": "version",
-    "aliases": "aliases", "alias": "aliases", "also_known_as": "aliases",
-    "category": "category", "type": "category",
-    "eol": "eol", "end_of_life": "eol", "eol_date": "eol",
-    "release_date": "release_date", "released": "release_date",
-    "end_support": "end_support", "end_of_support": "end_support",
-    "end_sale": "end_sale", "end_extended": "end_extended",
-    "latest": "latest", "url": "url",
-}
-
-
-def _header_key(name):
-    return _HEADERS.get(re.sub(r"[\s-]+", "_", name.strip().lower()), "")
-
-
-def load_component_catalog(path):
-    path = Path(path)
-    out = []
-    seen = set()
-    with open(path, newline="", encoding="utf-8-sig") as fh:
-        reader = csv.DictReader(fh)
-        mapping = {h: _header_key(h) for h in (reader.fieldnames or [])}
-        for line in reader:
-            row = dict.fromkeys(STANDARD_COLUMNS, "")
-            for header, value in line.items():
-                key = mapping.get(header, "")
-                if key and value:
-                    row[key] = value.strip()
-            if not row["product"]:
-                continue
-            row["aliases"] = "|".join(a.strip() for a in re.split(r"[|;]", row["aliases"]) if a.strip())
-            row["source"] = path.stem
-            row["product_id"] = f"user:{path.stem}:{row['vendor']}:{row['product']}"
-            row["id"] = f"{row['product_id']}@{row['version']}"
-            # keep ids unique when the file repeats a vendor/product/version
-            base, n = row["id"], 1
-            while row["id"] in seen:
-                n += 1
-                row["id"] = f"{base}#{n}"
-            seen.add(row["id"])
-            out.append(row)
-    return out
 
 
 _FIELDS = ["matched_product", "match_method", "match_confidence", "review", "lifecycle_status", "eol_date"]

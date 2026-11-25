@@ -10,6 +10,7 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
+from cmdb.inputs import load_catalog  # noqa: F401  (the reader lives in cmdb.inputs; kept importable from here)
 from cmdb.schema import STANDARD_COLUMNS
 
 DATE_COLUMNS = ["release_date", "end_sale", "end_support", "eol", "end_extended"]
@@ -163,11 +164,6 @@ def write_catalog(rows, path):
         writer = csv.DictWriter(handle, fieldnames=STANDARD_COLUMNS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
-
-
-def load_catalog(path):
-    with open(path, newline="", encoding="utf-8") as handle:
-        return list(csv.DictReader(handle))
 
 
 def main():

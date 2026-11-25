@@ -1,393 +1,264 @@
-"""Streamlit front end. Rendering only: every decision comes from the cmdb package.
+"""CMDB lifecycle: match a CMDB file against a lifecycle catalog and see what is end of life.
 
-Flow: one CMDB file is matched against the master catalog (default) and, optionally, against custom catalogs.
-Every tab reads those same match results, so the sections always agree with each other.
+The app only reads files. It knows nothing about how catalogs are built (`python -m cmdb.ingest`, `python -m cmdb.catalog`).
+Wording and table shaping live in cmdb/view.py, file reading in cmdb/inputs.py, matching in cmdb/matching.
+
+Page layout
+  sidebar   your CMDB file and your catalogs
+  top       the catalog to look at, and four headline numbers
+  tabs      Results (every row, click one to see why) | Coverage (score per catalog) | Look up (type one item)
 """
-import csv
 import hashlib
-import io
-import tempfile
 from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
-from cmdb.catalog import load_catalog
-from cmdb.compare import compare_results, comparison_summary, load_component_catalog, reference_coverage
-from cmdb.matching.lookup import filter_results, lookup
-from cmdb.matching.matcher import build_index, load_aliases, match_one, match_rows, save_alias, search_scored
+from cmdb import view
+from cmdb.inputs import load_catalog, parse_catalog, parse_cmdb
+from cmdb.matching.lookup import lookup
+from cmdb.matching.matcher import build_index, match_one, match_rows
 from cmdb.metrics import catalog_coverage, lifecycle_metrics, matching_metrics
 
-CATALOG_PATH = Path("data/master_catalog.csv")
-ALIASES_PATH = Path("aliases.csv")
-SAMPLE_PATH = Path("cmdb_extract.csv")      # used until the user uploads a CMDB file
-MASTER = "master"
+CATALOG_PATH = Path("data/master_catalog.csv")      # default catalog, used when the file exists
+SAMPLE_PATH = Path("cmdb_extract.csv")              # default CMDB file, used until one is uploaded
+DEFAULT = "master"
 
-# Columns of the match table: what was asked, why it matched (method, confidence, version rule), what lifecycle came back.
-INPUT_SHOWN = ["vendor", "product", "version"]
-MATCH_SHOWN = ["matched_product", "matched_source", "match_method", "match_confidence", "review",
-               "cycle_match", "matched_cycle", "lifecycle_status",
-               "release_date", "support_end", "eol_date", "extended_end", "days_to_eol", "latest_in_cycle", "newer_cycle", "dq_flags"]
+# technical columns, shown on request next to the plain ones
+TECHNICAL = ["match_method", "cycle_match", "matched_cycle", "matched_source", "support_end", "extended_end",
+             "latest_in_cycle", "newer_cycle", "dq_flags"]
+PERCENT = st.column_config.ProgressColumn(min_value=0, max_value=100, format="%d")
 
 st.set_page_config(page_title="CMDB lifecycle", layout="wide")
 
+
+# ---------------------------------------------------------------- loading and matching (cached)
 
 def digest(data):
     return hashlib.md5(data).hexdigest()
 
 
-# ---------------------------------------------------------------- loading and matching (cached)
-
 @st.cache_data
-def get_master(mtime):
+def read_default_catalog(mtime):
     return load_catalog(CATALOG_PATH)
 
 
-def parse_cmdb(data):
-    """CMDB extract bytes -> dicts. An extract may lack the vendor column, so default it to ''."""
-    rows = list(csv.DictReader(io.StringIO(data.decode("utf-8-sig"))))
-    for row in rows:
-        row.setdefault("vendor", "")
-    return rows
-
-
-def parse_custom_catalog(data):
-    # load_component_catalog takes a path, so spill the upload to a temp file; the file stem names the catalog
-    with tempfile.TemporaryDirectory() as folder:
-        path = Path(folder) / "custom.csv"
-        path.write_bytes(data)
-        return load_component_catalog(path)
-
-
 @st.cache_data(show_spinner=False)
-def match_cached(_rows, _catalog, input_key, catalog_key, use_aliases):
-    # the underscore arguments are not hashed: input_key / catalog_key stand in for them
-    aliases = load_aliases(ALIASES_PATH) if use_aliases else None
-    return match_rows(_rows, _catalog, aliases=aliases)
+def match_cached(_rows, _catalog, input_key, catalog_key):
+    # underscore arguments are not hashed: the two keys stand in for them
+    return match_rows(_rows, _catalog)
 
 
 @st.cache_resource(show_spinner=False)
 def index_cached(_catalog, catalog_key):
-    # the index is opaque to the UI: cache it and pass it on
     return build_index(_catalog)
 
 
-def to_csv_bytes(rows):
+def csv_bytes(rows):
     return pd.DataFrame(rows).to_csv(index=False).encode("utf-8")
 
 
-# ---------------------------------------------------------------- sidebar: inputs
+# ---------------------------------------------------------------- sidebar: the two inputs
 
-def choose_input():
-    st.sidebar.header("1. CMDB file")
-    upload = st.sidebar.file_uploader("CSV with product, version (optional: vendor, fw_or_pkg, ci_type)", type="csv")
+def load_cmdb():
+    st.sidebar.header("Your data")
+    upload = st.sidebar.file_uploader("CMDB file (CSV)", type="csv",
+                                      help="Needs a `product` column. Better results with `version`, `vendor`, `fw_or_pkg` (a package name) and `ci_type`.")
     if upload:
         name, data = upload.name, upload.getvalue()
     elif SAMPLE_PATH.exists():
         name, data = SAMPLE_PATH.name, SAMPLE_PATH.read_bytes()
-        st.sidebar.caption(f"No file uploaded: showing the sample `{name}`.")
+        st.sidebar.caption(f"Showing the sample file `{name}`. Upload yours above.")
     else:
-        st.info("Upload a CMDB CSV in the sidebar to start.")
+        st.info("Start by uploading your CMDB file (CSV) in the sidebar.")
         st.stop()
     rows = parse_cmdb(data)
     if not rows or "product" not in rows[0]:
-        st.error(f"`{name}` needs a `product` column.")
+        st.sidebar.error(f"`{name}` has no `product` column.")
         st.stop()
+    st.sidebar.success(f"{len(rows):,} rows in `{name}`")
     return name, rows, digest(data)
 
 
-def choose_catalogs(master):
-    """Master catalog always; custom catalogs are extra references to compare against it."""
-    st.sidebar.header("2. Catalogs")
-    st.sidebar.markdown("**Master catalog** (default)")
-    uploads = st.sidebar.file_uploader("Custom catalog(s) to compare with the master (vendor, product, version, eol ...)",
-                                       type="csv", accept_multiple_files=True)
-    catalogs = {MASTER: (master, str(CATALOG_PATH.stat().st_mtime))}
-    for upload in uploads:
-        data = upload.getvalue()
-        catalogs[Path(upload.name).stem] = (parse_custom_catalog(data), digest(data))
+def load_catalogs():
+    upload = st.sidebar.file_uploader("Add your own catalog(s) (CSV)", type="csv", accept_multiple_files=True,
+                                      help="Columns: `vendor`, `product`, `version`, and optionally `eol`, `release_date`, `aliases`. "
+                                           "It is matched next to the default catalog so you can compare them.")
+    catalogs = {}
+    if CATALOG_PATH.exists():
+        catalogs[DEFAULT] = (read_default_catalog(CATALOG_PATH.stat().st_mtime), str(CATALOG_PATH.stat().st_mtime))
+    for file in upload:
+        data = file.getvalue()
+        catalogs[Path(file.name).stem] = (parse_catalog(data, file.name), digest(data))
+    if not catalogs:
+        st.info(f"Upload a catalog (CSV) in the sidebar. The app uses `{CATALOG_PATH}` automatically when that file exists.")
+        st.stop()
+    empty = [name for name, (catalog, _) in catalogs.items() if not catalog]
+    if empty:
+        st.sidebar.error(f"No usable rows in {', '.join(empty)}: a catalog needs a `product` column.")
+        st.stop()
+    for name, (catalog, _) in catalogs.items():
+        st.sidebar.caption(f"**{name}**: {len({r['product_id'] for r in catalog}):,} products, {len(catalog):,} release cycles")
     return catalogs
 
 
-def run_matches(rows, input_key, catalogs):
-    runs = {}
-    aliases_key = str(ALIASES_PATH.stat().st_mtime) if ALIASES_PATH.exists() else ""
-    for name, (catalog, key) in catalogs.items():
-        is_master = name == MASTER
-        with st.spinner(f"Matching {len(rows):,} rows against {name} ({len(catalog):,} catalog rows)..."):
-            runs[name] = match_cached(rows, catalog, input_key, key + (aliases_key if is_master else ""), is_master)
-    return runs
+# ---------------------------------------------------------------- headline
+
+def show_headline(results):
+    h = view.headline(results)
+    cols = st.columns(4)
+    for col, (label, key, help_text) in zip(cols, [
+            ("Matched", "matched", "CMDB rows linked to a product of the catalog"),
+            ("With an end-of-life date", "dated", "rows for which the catalog gives a date"),
+            ("Already end of life", "past_eol", "rows past end of life, or on extended support only"),
+            ("To check", "to_check", "matched, but the match or the version deserves a human look")]):
+        count, pct = h[key]
+        col.metric(label, f"{pct:.0f}%", f"{count:,} of {h['rows']:,} rows", delta_color="off", help=help_text)
 
 
-# ---------------------------------------------------------------- tabs
+# ---------------------------------------------------------------- tab 1: results
 
-def headline_metrics(results):
-    """Four numbers every section can show for one set of results."""
-    quality = matching_metrics(results)
-    lifecycle = lifecycle_metrics(results)
-    cols = st.columns(5)
-    cols[0].metric("Rows", f"{quality['rows']:,}")
-    cols[1].metric("Matched", f"{quality['match_rate']:.1f}%", help="input rows linked to a catalog product")
-    cols[2].metric("Auto-accepted", f"{quality['auto_accept_rate']:.1f}%", help="matched without needing a human review")
-    cols[3].metric("Version identified", f"{lifecycle['version_identified_rate']:.1f}%", help="of matched rows, a release cycle was found")
-    cols[4].metric("EOL date found", f"{lifecycle['eol_date_rate']:.1f}%", help="of matched rows, the catalog gave an end-of-life date")
+def tab_results(rows, results, catalog, key, catalog_name):
+    filters = st.columns([3, 3, 1.4])
+    text = filters[0].text_input("Search", placeholder="vendor, product, version or matched product", key="results_text")
+    statuses = filters[1].multiselect("Lifecycle", view.status_options(results), key="results_status", placeholder="All")
+    technical = filters[2].toggle("Technical columns", key="results_technical")
+    review_only = filters[2].checkbox("Only rows to check", key="results_review")
 
+    shown = view.filter_results(results, text, statuses, review_only)
+    table = pd.DataFrame(view.results_table(shown))
+    if technical:
+        table = pd.concat([table, pd.DataFrame(shown)[TECHNICAL].reset_index(drop=True)], axis=1)
+    st.caption(f"{len(shown):,} of {len(results):,} rows. Click a row to see why it matched.")
+    event = st.dataframe(table, hide_index=True, on_select="rerun", selection_mode="single-row", key="results_table",
+                         column_config={"Confidence": PERCENT, "Days left": st.column_config.NumberColumn(format="%d")})
+    st.download_button("Download all results (CSV)", csv_bytes(results), f"matches_{catalog_name}.csv", "text/csv")
 
-def show_match_table(table):
-    """Matched items with their reasoning (method, confidence, version rule) and the lifecycle fields retrieved."""
-    table = table.copy()
-    # days_to_eol mixes '' and numbers: make it numeric so the table renders (and sorts) properly
-    table["days_to_eol"] = pd.to_numeric(table["days_to_eol"], errors="coerce")
-    shown = [c for c in INPUT_SHOWN if c in table] + MATCH_SHOWN
-    st.dataframe(table[shown], hide_index=True,
-                 column_config={"match_confidence": st.column_config.ProgressColumn("match_confidence", min_value=0, max_value=100, format="%d")})
-
-
-def tab_matches(rows, runs, catalogs):
-    name = st.radio("Show matches against", list(runs), horizontal=True) if len(runs) > 1 else MASTER
-    results = runs[name]
-    headline_metrics(results)
-
-    table = pd.DataFrame(results)
-    filters = st.columns(3)
-    methods = filters[0].multiselect("Match method", sorted(table["match_method"].unique()))
-    statuses = filters[1].multiselect("Lifecycle status", sorted(table["lifecycle_status"].unique()))
-    review_only = filters[2].checkbox("Needs review only")
-    if methods:
-        table = table[table["match_method"].isin(methods)]
-    if statuses:
-        table = table[table["lifecycle_status"].isin(statuses)]
-    if review_only:
-        table = table[table["review"] != ""]
-    show_match_table(table)
-    st.caption(f"{len(table):,} of {len(results):,} rows. method = how the product was found (alias, exact, exact+cleaned, fuzzy ...); "
-               "cycle_match = how the version was mapped to a release cycle.")
-    st.download_button("Download matches CSV", to_csv_bytes(results), f"matches_{name}.csv", "text/csv")
-
-    explain_row(rows, catalogs[name], name == MASTER)
-    if name == MASTER:
-        review_queue(results)
-
-
-def explain_row(rows, catalog_entry, use_aliases):
-    """Step-by-step reasoning for one input row, straight from the matcher's trace."""
-    catalog, key = catalog_entry
-    with st.expander("Explain one row"):
-        choice = st.selectbox("Row", range(len(rows)), key="explain_row",
-                              format_func=lambda i: f"{i}: {rows[i].get('vendor', '')} {rows[i]['product']} {rows[i].get('version', '')}".strip())
-        aliases = load_aliases(ALIASES_PATH) if use_aliases else None
+    selected = event.selection.rows
+    if not selected or selected[0] >= len(shown):
+        return
+    result = shown[selected[0]]
+    st.subheader(f"{result['vendor']} {result['product']} {result.get('version', '')}".strip())
+    for line in view.explain(result):
+        st.markdown(f"- {line}")
+    if result.get("product_id"):
+        with st.expander(f"All release cycles of {result['matched_product']}"):
+            cycles = pd.DataFrame([r for r in catalog if r["product_id"] == result["product_id"]])
+            st.dataframe(cycles[["version", "release_date", "end_sale", "end_support", "eol", "end_extended", "latest"]]
+                         .rename(columns=lambda c: c.replace("_", " ")), hide_index=True)
+    with st.expander("Matching steps (technical)"):
         trace = {}
-        match_one(rows[choice], index_cached(catalog, key), trace, aliases=aliases)
+        match_one(rows[next(i for i, r in enumerate(results) if r is result)], index_cached(catalog, key), trace)
         for step, detail in trace.items():
             st.write(f"**{step}**: {detail}")
 
 
-def review_queue(results):
-    """Let a human confirm a suggested match once; aliases.csv makes it stick on the next run."""
-    pending = [r for r in results if r.get("review") and r.get("product_id")]
-    with st.expander(f"Review queue ({len(pending)})"):
-        for n, row in enumerate(pending[:20]):
-            label = f"{row['vendor']} {row['product']} {row['version']} -> {row['matched_product']} ({row['match_confidence']})"
-            left, right = st.columns([4, 1])
-            left.write(f"{label}: {row['review']}")
-            if right.button("Save alias", key=f"alias_{n}"):
-                save_alias(ALIASES_PATH, row["vendor"], row["product"], row["product_id"])
-                st.success("Alias saved: it applies on the next run (change the input or reload).")
+# ---------------------------------------------------------------- tab 2: coverage
 
-
-def tab_metrics(runs, catalogs):
-    st.subheader("Matching and lifecycle metrics per catalog")
-    rows = []
+def tab_coverage(runs, catalogs, selected):
+    st.markdown("How much of your CMDB file each catalog covers. Add a catalog in the sidebar to compare it with the default one.")
+    scores = []
     for name, results in runs.items():
-        quality = matching_metrics(results)
+        h = view.headline(results)
         lifecycle = lifecycle_metrics(results)
-        rows.append({"catalog": name, "rows": quality["rows"], "matched %": quality["match_rate"],
-                     "auto-accepted %": quality["auto_accept_rate"], "review %": quality["review_queue_rate"],
-                     "unmatched %": quality["unmatched_rate"], "version identified %": lifecycle["version_identified_rate"],
-                     "EOL date found %": lifecycle["eol_date_rate"], "rows past EOL": lifecycle["past_eol_rows"]})
-    st.dataframe(pd.DataFrame(rows), hide_index=True)
+        scores.append({"Catalog": name, "CMDB rows": h["rows"], "Matched %": h["matched"][1], "End-of-life date %": h["dated"][1],
+                       "Already end of life": h["past_eol"][0], "To check %": h["to_check"][1],
+                       "Not matched %": matching_metrics(results)["unmatched_rate"],
+                       "Version identified % (of matched)": lifecycle["version_identified_rate"]})
+    percent_columns = {c: st.column_config.ProgressColumn(c, min_value=0, max_value=100, format="%.0f%%")
+                       for c in ("Matched %", "End-of-life date %", "To check %", "Not matched %", "Version identified % (of matched)")}
+    st.dataframe(pd.DataFrame(scores), hide_index=True, column_config=percent_columns)
+    st.download_button("Download coverage table (CSV)", csv_bytes(scores), "coverage.csv", "text/csv")
 
-    name = st.radio("Details for", list(runs), horizontal=True, key="metrics_catalog") if len(runs) > 1 else MASTER
-    results = runs[name]
-    quality = matching_metrics(results)
-    lifecycle = lifecycle_metrics(results)
-    left, right = st.columns(2)
-    left.markdown("**Match method**")
-    left.bar_chart(pd.Series(quality["by_match_method"], name="rows"))
-    right.markdown("**Lifecycle status**")
-    right.bar_chart(pd.Series(quality["by_lifecycle_status"], name="rows"))
-    left.markdown("**How the version was mapped to a release cycle**")
-    left.bar_chart(pd.Series(lifecycle["by_cycle_match"], name="rows"))
-    right.markdown("**Most frequent unmatched vendors**")
-    right.dataframe(pd.DataFrame(quality["unmatched_top_vendors"], columns=["vendor", "rows"]), hide_index=True)
+    st.subheader(f"Not matched by {selected}")
+    missing = view.top_unmatched(runs[selected])
+    if missing:
+        st.caption("The most frequent products this catalog does not know: the first ones to add or fix.")
+        st.dataframe(pd.DataFrame(missing), hide_index=True)
+    else:
+        st.success("Every row found a product in this catalog.")
 
-    st.subheader("Catalog coverage")
-    catalog_rows = []
-    for catalog_name, (catalog, _) in catalogs.items():
-        for row in catalog_coverage(catalog):
-            catalog_rows.append({"catalog": catalog_name, **row})
-    st.dataframe(pd.DataFrame(catalog_rows), hide_index=True)
+    with st.expander("What the catalogs contain"):
+        contents = [{"catalog": name, **row} for name, (catalog, _) in catalogs.items() for row in catalog_coverage(catalog)]
+        st.dataframe(pd.DataFrame(contents), hide_index=True)
 
 
-def tab_compare(rows, runs, catalogs):
-    if len(runs) < 2:
-        st.info("Add a custom catalog in the sidebar to compare it with the master catalog on the same CMDB file.")
-        return
-    compared = compare_results(rows, runs)
-    coverage = reference_coverage(compared)
-    for entry in coverage:      # size of each catalog next to how much of the CMDB it covers
-        totals = catalog_coverage(catalogs[entry["reference"]][0])[-1]
-        entry.update(products=totals["products"], cycles=totals["cycles"], pct_eol_date=totals["pct_eol_date"])
-    summary = comparison_summary(compared)
+# ---------------------------------------------------------------- tab 3: look up one item
 
-    st.subheader("Coverage per catalog")
-    st.dataframe(pd.DataFrame(coverage), hide_index=True)
-    st.bar_chart(pd.DataFrame(coverage).set_index("reference")[["auto_accept_pct", "review_pct", "unmatched_pct"]])
+def tab_lookup(catalogs, selected):
+    st.markdown("Type a product the way your CMDB writes it and see how the catalog answers. Leave it empty to browse the catalog.")
+    cols = st.columns(3)
+    vendor = cols[0].text_input("Vendor", key="one_vendor", placeholder="optional")
+    product = cols[1].text_input("Product", key="one_product", placeholder="e.g. Windows Server 2016, PowerEdge R640")
+    version = cols[2].text_input("Version", key="one_version", placeholder="e.g. 3.11.2, a partial version is fine")
+    package = st.text_input("Package name (optional)", key="one_package", placeholder="e.g. openssh-server-8.7p1")
 
-    st.subheader("Agreement between catalogs")
-    agree = {row["name"]: row["count"] for row in summary if row["kind"] == "agree"}
-    cols = st.columns(4)
-    cols[0].metric("All agree", agree["all"], help="every catalog matched the same product")
-    cols[1].metric("Partial", agree["partial"], help="some catalogs matched it, others did not")
-    cols[2].metric("Conflict", agree["conflict"], help="catalogs matched different products")
-    cols[3].metric("Nobody matched", agree["none-matched"])
+    catalog, key = catalogs[selected]
+    if not product.strip():
+        return browse(catalog)
 
-    st.subheader("Matched rows side by side")
-    names = list(runs)
-    filters = st.columns(3)
-    text = filters[0].text_input("Search input or matched product", key="compare_text")
-    agree_filter = filters[1].multiselect("Agreement", ["all", "partial", "conflict", "none-matched"], key="compare_agree")
-    unmatched_in = filters[2].selectbox("Only rows NOT matched by", ["(any)"] + names, key="compare_unmatched")
+    query = {"vendor": vendor.strip(), "product": product.strip(), "version": version.strip(), "fw_or_pkg": package.strip()}
+    answers = []
+    for name, (other, other_key) in catalogs.items():
+        answers.append(match_one(query, index_cached(other, other_key)) | {"catalog": name})
+    table = pd.DataFrame(view.results_table(answers)).drop(columns=["Vendor", "Product", "Version"])
+    table.insert(0, "Catalog", [a["catalog"] for a in answers])
+    st.subheader("Best match")
+    st.dataframe(table, hide_index=True, column_config={"Confidence": PERCENT})
+    best = next((a for a in answers if a["catalog"] == selected), answers[0])
+    for line in view.explain(best):
+        st.markdown(f"- {line}")
 
-    table = pd.DataFrame(compared)
-    if text.strip():
-        search_columns = ["product"] + [f"{n}:matched_product" for n in names]
-        haystack = table[search_columns].astype(str).apply(" ".join, axis=1).str.lower()
-        table = table[haystack.str.contains(text.strip().lower(), regex=False)]
-    if agree_filter:
-        table = table[table["agree"].isin(agree_filter)]
-    if unmatched_in != "(any)":
-        table = table[table[f"{unmatched_in}:matched_product"] == ""]
-
-    shown = [c for c in INPUT_SHOWN if c in table] + ["agree"]
-    for n in names:
-        shown += [f"{n}:{field}" for field in ("matched_product", "match_method", "match_confidence", "lifecycle_status", "eol_date")]
-    st.dataframe(table[shown], hide_index=True)
-    st.caption(f"{len(table):,} of {len(compared):,} rows")
-    st.download_button("Download comparison CSV", to_csv_bytes(compared), "comparison.csv", "text/csv")
-
-    differing = pd.DataFrame([row for row in summary if row["kind"] == "eol_differs"])
-    if not differing.empty:
-        with st.expander(f"Same item, different EOL date ({len(differing)})"):
-            st.dataframe(differing[["name", "detail"]], hide_index=True)
-
-
-LOOKUP_SHOWN = ["product", "vendor", "source", "product_match", "product_confidence", "vendor_match", "cycle", "version_fit",
-                "release_date", "support_end", "eol_date", "extended_end", "days_to_eol", "lifecycle_status", "latest_in_cycle"]
-
-
-def show_lookup(index, vendor, product, version):
-    """Catalog side of the search: every product and release cycle that fits the typed description."""
-    result = lookup(index, vendor, product, version)
-    rows = result["rows"]
-    if result["detected_version"] and not version.strip():
-        st.caption(f"Version `{result['detected_version']}` detected in the product name.")
-    if not rows:
+    st.subheader(f"Release cycles in {selected}")
+    found = lookup(index_cached(catalog, key), vendor, product, version)
+    if found["detected_version"] and not version.strip():
+        st.caption(f"Version `{found['detected_version']}` was read from the product name.")
+    if not found["rows"]:
         st.info("Nothing in this catalog fits that description.")
         return
-    with_cycle = [r for r in rows if r["cycle"]]
-    with_eol = [r for r in with_cycle if r["eol_date"]]
-    cols = st.columns(3)
-    cols[0].metric("Products found", len({r["product_id"] for r in rows}))
-    cols[1].metric("Cycles fitting", len(with_cycle), help="release cycles that fit the version you typed (all cycles when none typed)")
-    cols[2].metric("With an EOL date", f"{100 * len(with_eol) / max(len(with_cycle), 1):.0f}%")
-    table = pd.DataFrame(rows)[LOOKUP_SHOWN]
+    cycles = pd.DataFrame(found["rows"])
     for column in ("release_date", "support_end", "eol_date", "extended_end"):
-        table[column] = table[column].astype(str).replace({"None": ""})      # dates and missing dates in one text column
-    st.dataframe(table, hide_index=True,
-                 column_config={"product_confidence": st.column_config.ProgressColumn("product_confidence", min_value=0, max_value=100, format="%d")})
-    st.caption("version_fit: exact = same cycle | cycle-prefix = your version is a patch of this cycle | "
-               "version-prefix = your version is partial, so every cycle that starts with it is listed | any = no version typed.")
+        cycles[column] = cycles[column].astype(str).replace({"None": ""})      # dates and missing dates in one text column
+    cycles["lifecycle_status"] = cycles["lifecycle_status"].map(view.status_label)
+    cycles = cycles[["product", "vendor", "source", "cycle", "release_date", "support_end", "eol_date", "lifecycle_status", "product_confidence"]]
+    cycles.columns = ["Product", "Vendor", "Source", "Cycle", "Released", "Support ends", "End of life", "Lifecycle", "Confidence"]
+    st.dataframe(cycles, hide_index=True, column_config={"Confidence": PERCENT})
 
 
-def tab_explore(rows, runs, catalogs):
-    """Search by vendor, product and version: what the catalog says, and which rows of the uploaded file fit."""
-    name = st.radio("Catalog", list(runs), horizontal=True, key="explore_catalog") if len(runs) > 1 else MASTER
-    catalog, key = catalogs[name]
-    results = runs[name]
-
-    cols = st.columns(3)
-    vendor = cols[0].text_input("Vendor", key="explore_vendor")
-    product = cols[1].text_input("Product (a version in the name is detected)", key="explore_product")
-    version = cols[2].text_input("Version (partial is fine: 3 or 3.11)", key="explore_version")
-    searching = bool(vendor.strip() or product.strip() or version.strip())
-
-    if product.strip():
-        st.subheader("In the catalog")
-        show_lookup(index_cached(catalog, key), vendor, product, version)
-    elif searching:
-        st.caption("Type a product name to look it up in the catalog. Vendor and version still filter the file below.")
-
-    st.subheader("In your CMDB file")
-    if searching:
-        # filter_results returns the same dict objects, so identity tells us which positions survived (needed for the drill-down)
-        kept = {id(r) for r in filter_results(results, vendor, product, version)}
-        positions = [i for i, r in enumerate(results) if id(r) in kept]
-    else:
-        positions = list(range(len(results)))
-    found = [results[i] for i in positions]
-    st.caption(f"{len(found):,} of {len(results):,} input rows")
-    if not found:
-        st.info("No input row fits that description.")
-        return
-    headline_metrics(found)       # metrics follow the filter, so they describe exactly the rows shown
-    show_match_table(pd.DataFrame(found))
-
-    chosen = st.selectbox("Look closer at one row", positions, key="explore_row",
-                          format_func=lambda i: f"{i}: {rows[i].get('vendor', '')} {rows[i]['product']} {rows[i].get('version', '')}".strip())
-    result = results[chosen]
-    st.markdown("**Candidate products in the catalog for this row** (what the matcher chose among)")
-    candidates = search_scored(index_cached(catalog, key), result["product"])
-    if candidates:
-        st.dataframe(pd.DataFrame(candidates)[["product", "vendor", "source", "matched_on", "method", "confidence", "verdict"]], hide_index=True)
-    else:
-        st.caption("No similar product in this catalog.")
-    if result["product_id"]:
-        st.markdown(f"**Release cycles of {result['matched_product']}** (matched cycle: `{result['matched_cycle'] or 'none'}`, "
-                    f"version rule: `{result['cycle_match'] or 'n/a'}`)")
-        cycles = [r for r in catalog if r["product_id"] == result["product_id"]]
-        st.dataframe(pd.DataFrame(cycles).drop(columns=["id", "product_id", "aliases"]), hide_index=True)
-
-    with st.expander("Browse the catalog itself"):
-        browse_catalog(catalog)
-
-
-def browse_catalog(catalog):
-    columns = st.multiselect("Columns", list(catalog[0]), ["product_id", "vendor", "product", "source", "category"])
-    products = pd.DataFrame(catalog).drop_duplicates("product_id")
-    st.dataframe(products[columns], hide_index=True)
-    st.caption(f"{len(products):,} products in this catalog.")
+def browse(catalog):
+    text = st.text_input("Search the catalog", key="browse_text", placeholder="product, vendor or source")
+    products = pd.DataFrame(catalog)
+    cycles = products.groupby("product_id").size().rename("Cycles")
+    products = products.drop_duplicates("product_id").set_index("product_id").join(cycles)
+    table = products[["product", "vendor", "source", "category", "Cycles"]].rename(columns=str.capitalize)
+    if text.strip():
+        words = text.lower().split()
+        haystack = table[["Product", "Vendor", "Source"]].astype(str).apply(" ".join, axis=1).str.lower()
+        table = table[haystack.apply(lambda h: all(w in h for w in words))]
+    st.caption(f"{len(table):,} of {len(products):,} products")
+    st.dataframe(table.head(2000), hide_index=True)
+    if len(table) > 2000:
+        st.caption("Showing the first 2,000: narrow the search.")
 
 
 # ---------------------------------------------------------------- page
 
-if not CATALOG_PATH.exists():
-    st.error("Master catalog not found. Run `python -m cmdb.ingest` then `python -m cmdb.catalog`.")
-    st.stop()
+input_name, rows, input_key = load_cmdb()
+catalogs = load_catalogs()
+runs = {}
+for name, (catalog, key) in catalogs.items():
+    with st.spinner(f"Matching {len(rows):,} rows against {name}..."):
+        runs[name] = match_cached(rows, catalog, input_key, key)
 
-master = get_master(CATALOG_PATH.stat().st_mtime)
-input_name, rows, input_key = choose_input()
-catalogs = choose_catalogs(master)
-runs = run_matches(rows, input_key, catalogs)
+st.title("CMDB lifecycle")
+selected = st.segmented_control("Catalog", list(catalogs), default=list(catalogs)[0], key="catalog") if len(catalogs) > 1 else list(catalogs)[0]
+selected = selected or list(catalogs)[0]
+show_headline(runs[selected])
 
-st.title("CMDB lifecycle matching")
-st.caption(f"`{input_name}`: {len(rows):,} rows matched against {', '.join(catalogs)}.")
-matches_tab, metrics_tab, compare_tab, explore_tab = st.tabs(["Matches", "Metrics", "Compare catalogs", "Explore"])
-with matches_tab:
-    tab_matches(rows, runs, catalogs)
-with metrics_tab:
-    tab_metrics(runs, catalogs)
-with compare_tab:
-    tab_compare(rows, runs, catalogs)
-with explore_tab:
-    tab_explore(rows, runs, catalogs)
+results_tab, coverage_tab, lookup_tab = st.tabs(["Results", "Coverage", "Look up"])
+with results_tab:
+    tab_results(rows, runs[selected], catalogs[selected][0], catalogs[selected][1], selected)
+with coverage_tab:
+    tab_coverage(runs, catalogs, selected)
+with lookup_tab:
+    tab_lookup(catalogs, selected)
