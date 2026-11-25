@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from cmdb.ingest import apple, citrix, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
+from cmdb.ingest import apple, citrix, trellix, eolnetwork, eosldate, eoslai, endoflife, ibm, manual, microsoft, redhat
 from cmdb.ingest.__main__ import main
 from cmdb.ingest.common import CollectorError, iso, month_end, rec, vendor_rows
 from cmdb.schema import STANDARD_COLUMNS
@@ -242,3 +242,29 @@ def test_citrix_row_layout_one_row_per_language_and_release_date_from_cycle(tmp_
     assert list(row) == STANDARD_COLUMNS and row["source"] == "citrix" and row["vendor"] == "citrix"
     assert row["eol"] == "2030-08-08" and "Citrix NetScaler ADC" in row["aliases"].split("|")
 
+
+TRELLIX_SOFTWARE = """Trellix Product,Version Number,End-of-Life
+Advanced Threat Defense,5.2.X,6/30/26
+Advanced Threat Defense,"4.6, 4.4",12/30/21
+Agent,5.0,—
+"""
+TRELLIX_HARDWARE = """Trellix Product,Model Number,End-of-Sale,End-of-Life,End-of-Support
+Advanced Threat Defense,ATD 3100,12/31/20,12/31/26,12/31/26
+Network Security,NS 5100,—,—,6/30/27
+Email Security,EX 3500,—,—,—
+"""
+
+
+def test_trellix_software_splits_version_lists_and_drops_undated():
+    records = trellix.parse_csv(TRELLIX_SOFTWARE, "software")
+    assert [(r["cycle"], r["eol"]) for r in records] == [("5.2.X", "2026-06-30"), ("4.6", "2021-12-30"), ("4.4", "2021-12-30")]
+
+
+def test_trellix_hardware_dates_and_rows(tmp_path):
+    records = trellix.parse_csv(TRELLIX_HARDWARE, "hardware")
+    first, second = records
+    assert (first["end_sale"], first["end_support_full"], first["eol"]) == ("2020-12-31", "2026-12-31", "2026-12-31")
+    assert second["eol"] == "2027-06-30"                 # no End-of-Life date: end of support stands in
+    (tmp_path / trellix.FEED_FILE).write_text(json.dumps(records))
+    rows = trellix.standardize(tmp_path)
+    assert rows[0]["vendor"] == "trellix" and rows[0]["source"] == "trellix" and "ATD 3100" in rows[0]["aliases"].split("|")
