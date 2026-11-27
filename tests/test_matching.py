@@ -209,3 +209,12 @@ def test_search_scored_methods_and_confidence():
     assert typo and typo[0]["method"] == "fuzzy" and typo[0]["product_id"] == "p:b"
     assert search_scored(index, "") == []
     assert search_scored(index, "zzzzqqqq") == []
+
+
+def test_package_takes_eol_of_its_distro():
+    catalog = [cat_row("p:zip", "Zip", "3.0"),
+               cat_row("p:rhel", "Red Hat Enterprise Linux", "7", vendor="redhat", eol="2024-06-30")]
+    result = run(catalog, product="zip", version="3.0-11.el7")
+    assert (result["product_id"], result["match_method"], result["matched_cycle"]) == ("p:rhel", "distro", "7")
+    assert result["eol_date"] == "2024-06-30"
+    assert run(catalog[:1], product="zip", version="3.0-11.el7")["match_method"] == "none"   # never the package's own

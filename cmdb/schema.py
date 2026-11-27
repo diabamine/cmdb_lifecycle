@@ -20,7 +20,7 @@ STANDARD_COLUMNS = [
 # Columns written by matching for every input row (input columns are kept as-is, these are appended).
 MATCH_COLUMNS = [
     "product_id", "matched_product", "matched_source", "matched_vendor", "category",
-    "match_method",       # alias | alias-none | exact | exact+cleaned | exact+rule | exact+rollup | fuzzy | none
+    "match_method",       # alias | alias-none | distro | exact | exact+cleaned | exact+rule | exact+rollup | fuzzy | none
     "match_confidence",   # 0-100
     "review",             # "" = auto-accepted, otherwise the reason a human should look
     "matched_cycle", "cycle_match", "release_date", "end_sale", "support_end", "eol_date", "extended_end",

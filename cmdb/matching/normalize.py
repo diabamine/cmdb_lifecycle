@@ -49,6 +49,9 @@ ROLLUP_RULES = [
     (r"^libxml2.*$", "libxml2"),
     (r"^libgnutls.*$", "gnutls"),
 ]
+# Package release suffix -> distro that ships the package: "3.0-11.el7" is Red Hat Enterprise Linux 7.
+DISTRO_RULES = [(r"[.+~]el(\d+)", "Red Hat Enterprise Linux"), (r"\.fc(\d+)", "Fedora Linux"),
+                (r"\.amzn(\d+)", "Amazon Linux"), (r"[+~]deb(\d+)u", "Debian")]
 LANG_PREFIX = re.compile(r"^(?:python3?|ruby|golang|node|php|lua|perl)-")   # language binding named after the upstream module
 PKG_SUFFIX = re.compile(r"-(?:dev|doc|docs|data|common|dbg|dbgsym|bin|utils|tools|cli|static|headers|tests?|examples|l10n|plugins?|server|client|libs?|core|base)$")
 PKG_VERSION = re.compile(r"(?:-\d+(?:\.\d+)*)+$")   # trailing -14, -1.0-0
@@ -111,6 +114,16 @@ def rollup_names(pkg):
     if stripped != pkg and len(cleaned) >= 4:
         out.append((cleaned, "rollup-lang" if is_lang else "rollup"))
     return out
+
+
+def package_distro(row):
+    """(distro name, release) read from a package version suffix, or None."""
+    text = f"{row.get('version') or ''} {row.get('fw_or_pkg') or ''}".lower()
+    for pattern, distro in DISTRO_RULES:
+        found = re.search(pattern, text)
+        if found:
+            return distro, found.group(1)
+    return None
 
 
 def name_candidates(row):

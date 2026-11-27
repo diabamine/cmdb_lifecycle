@@ -23,6 +23,7 @@ METHOD_TEXT = {
     "exact+cleaned": "The name matches once vendor words, versions and punctuation are ignored.",
     "exact+rule": "The name matches through a built-in naming rule (for example a package mapped to its upstream product).",
     "exact+rollup": "The name matches a product family (for example a model rolled up to its series).",
+    "distro": "This is a package: it has no end of life of its own, so the dates of its Linux distribution (read from the version suffix) apply.",
     "fuzzy": "The name is similar but not identical: worth a check.",
     "alias-none": "You marked this item as not being a catalog product.",
     "none": "No product in this catalog looks like this one.",

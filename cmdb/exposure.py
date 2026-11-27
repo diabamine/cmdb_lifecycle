@@ -201,7 +201,8 @@ def add_exposure(results, catalog, snapshot_dir):
             row = dict(result)
             row.update(kev_cves=0, kev_ransomware=0, kev_latest_added="", epss_max="")
             row.update({column: "" for column in EXPOSURE_COLUMNS[4:]})
-            product = index.products.get(result.get("product_id"))
+            # a distro match only dates a package: the distro's own CVEs are not the package's
+            product = None if result.get("match_method") == "distro" else index.products.get(result.get("product_id"))
             if product:
                 row.update(kev_columns(kev.get(product["id"])))
             if nvd:

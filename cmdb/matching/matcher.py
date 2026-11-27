@@ -1,4 +1,4 @@
-"""Public matching API. Cascade: human alias -> exact (normalised) -> fuzzy with vendor signal, then version -> cycle.
+"""Public matching API. Cascade: human alias -> package distro -> exact (normalised) -> fuzzy with vendor signal, then version -> cycle.
 Takes and returns plain dicts; never imports streamlit or pandas."""
 import csv
 from collections import defaultdict
@@ -8,9 +8,10 @@ from pathlib import Path
 from rapidfuzz import fuzz, process
 
 from cmdb.matching.index import CatalogIndex, build_index
-from cmdb.matching.lifecycle import (CYCLE_PROBLEMS, days_to_eol, lifecycle_status, newer_cycle, resolve_cycle,
-                                     source_mismatch)
-from cmdb.matching.normalize import GENERIC_VENDORS, digit_tokens, name_candidates, norm, norm_vendor, vend_ok
+from cmdb.matching.lifecycle import (CYCLE_PROBLEMS, days_to_eol, lifecycle_status, match_cycle, newer_cycle,
+                                     resolve_cycle, source_mismatch)
+from cmdb.matching.normalize import (GENERIC_VENDORS, digit_tokens, name_candidates, norm, norm_vendor,
+                                     package_distro, vend_ok)
 from cmdb.schema import MATCH_COLUMNS
 
 AUTO, REVIEW = 90, 85    # score thresholds: >= AUTO is auto-accepted, >= REVIEW goes to a human
@@ -134,6 +135,11 @@ def find_product(index, query, aliases, trace=None):
             trace["alias"] = target
         return (None, "alias-none", 100) if target == "-" else (target, "alias", 100)
 
+    distro = package_distro(query)                       # packages have no EOL of their own: the distro's applies
+    if distro:
+        ids = index.names.get(norm(distro[0]))
+        return (pick_product(index, ids, ""), "distro", 95) if ids else (None, "none", 0)
+
     found = find_exact(index, kinds, vendor_key, trace) or find_fuzzy(index, kinds, vendor_key, trace)
     return found or (None, "none", 0)
 
@@ -179,9 +185,10 @@ def match_one(query, catalog_index, trace=None, aliases=None, today=None):
     result.update(product_id=product_id, matched_product=product["name"], matched_source=product["source"],
                   matched_vendor=product["vendor"], category=product["category"],
                   match_method=method, match_confidence=confidence)
-    flags = vendor_flags(query, product)
-
-    release, cycle_how = resolve_cycle(product, query)
+    if method == "distro":     # the row's vendor and version describe the package, not the distro
+        flags, (release, cycle_how) = [], match_cycle(product, package_distro(query)[1])
+    else:
+        flags, (release, cycle_how) = vendor_flags(query, product), resolve_cycle(product, query)
     result["cycle_match"] = cycle_how
     if confidence < AUTO:
         result["review"] = "low-confidence product match"
